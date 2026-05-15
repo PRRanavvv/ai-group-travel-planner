@@ -1,0 +1,400 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "destination_id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string"
+        },
+        "country_code": {
+            "type": "string"
+        },
+        "state_province": {
+            "type": "string"
+        },
+        "coordinates": {
+            "type": "object",
+            "properties": {
+                "lat": {
+                    "type": "number"
+                },
+                "lng": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "lat",
+                "lng"
+            ]
+        },
+        "place_id": {
+            "type": "string"
+        },
+        "timezone": {
+            "type": "string"
+        },
+        "climate": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "best_months": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "avoid_months": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "integer"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "seasons": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "months": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "type": "integer"
+                                        }
+                                    ]
+                                },
+                                "temp_c": {
+                                    "type": "object",
+                                    "properties": {
+                                        "min": {
+                                            "type": "integer"
+                                        },
+                                        "max": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "min",
+                                        "max"
+                                    ]
+                                },
+                                "notes": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "months",
+                                "temp_c",
+                                "notes"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "months": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "type": "integer"
+                                        }
+                                    ]
+                                },
+                                "temp_c": {
+                                    "type": "object",
+                                    "properties": {
+                                        "min": {
+                                            "type": "integer"
+                                        },
+                                        "max": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "min",
+                                        "max"
+                                    ]
+                                },
+                                "notes": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "months",
+                                "temp_c",
+                                "notes"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                },
+                                "months": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "type": "integer"
+                                        }
+                                    ]
+                                },
+                                "temp_c": {
+                                    "type": "object",
+                                    "properties": {
+                                        "min": {
+                                            "type": "integer"
+                                        },
+                                        "max": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "required": [
+                                        "min",
+                                        "max"
+                                    ]
+                                },
+                                "notes": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "name",
+                                "months",
+                                "temp_c",
+                                "notes"
+                            ]
+                        }
+                    ]
+                },
+                "annual_rainfall_mm": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "type",
+                "best_months",
+                "avoid_months",
+                "seasons",
+                "annual_rainfall_mm"
+            ]
+        },
+        "tags": {
+            "type": "object",
+            "properties": {
+                "primary": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "secondary": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "avoid_if_you_want": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "primary",
+                "secondary",
+                "avoid_if_you_want"
+            ]
+        },
+        "travel_info": {
+            "type": "object",
+            "properties": {
+                "currency_code": {
+                    "type": "string"
+                },
+                "languages": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "safety_index": {
+                    "type": "number"
+                },
+                "cost_index": {
+                    "type": "number"
+                },
+                "crowd_level": {
+                    "type": "string"
+                },
+                "visa_required_for": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "currency_code",
+                "languages",
+                "safety_index",
+                "cost_index",
+                "crowd_level",
+                "visa_required_for"
+            ]
+        },
+        "ai_meta": {
+            "type": "object",
+            "properties": {
+                "popularity_score": {
+                    "type": "number"
+                },
+                "trending_score": {
+                    "type": "number"
+                },
+                "embedding_id": {
+                    "type": "string"
+                },
+                "last_enriched_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "popularity_score",
+                "trending_score",
+                "embedding_id",
+                "last_enriched_at"
+            ]
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "data_source": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "boolean"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "data_source",
+                "verified",
+                "created_at",
+                "updated_at"
+            ]
+        }
+    },
+    "required": [
+        "destination_id",
+        "name",
+        "type",
+        "country_code",
+        "state_province",
+        "coordinates",
+        "place_id",
+        "timezone",
+        "climate",
+        "tags",
+        "travel_info",
+        "ai_meta",
+        "meta"
+    ]
+}

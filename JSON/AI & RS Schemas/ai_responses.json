@@ -1,0 +1,246 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "response_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "prompt_id": {
+            "type": "string"
+        },
+        "request": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "type": "string"
+                },
+                "prompt_version": {
+                    "type": "string"
+                },
+                "temperature": {
+                    "type": "number"
+                },
+                "max_tokens": {
+                    "type": "integer"
+                },
+                "system_prompt_hash": {
+                    "type": "string"
+                },
+                "input_context": {
+                    "type": "object",
+                    "properties": {
+                        "trip_type": {
+                            "type": "string"
+                        },
+                        "member_count": {
+                            "type": "integer"
+                        },
+                        "preferences_ids": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "destination": {
+                            "type": "string"
+                        },
+                        "duration_days": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "trip_type",
+                        "member_count",
+                        "preferences_ids",
+                        "destination",
+                        "duration_days"
+                    ]
+                }
+            },
+            "required": [
+                "model",
+                "prompt_version",
+                "temperature",
+                "max_tokens",
+                "system_prompt_hash",
+                "input_context"
+            ]
+        },
+        "response": {
+            "type": "object",
+            "properties": {
+                "output_type": {
+                    "type": "string"
+                },
+                "raw_output_ref": {
+                    "type": "string"
+                },
+                "parsed_successfully": {
+                    "type": "boolean"
+                },
+                "entities_generated": {
+                    "type": "object",
+                    "properties": {
+                        "day_plans": {
+                            "type": "integer"
+                        },
+                        "activities": {
+                            "type": "integer"
+                        },
+                        "stays": {
+                            "type": "integer"
+                        },
+                        "transport_segments": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "day_plans",
+                        "activities",
+                        "stays",
+                        "transport_segments"
+                    ]
+                }
+            },
+            "required": [
+                "output_type",
+                "raw_output_ref",
+                "parsed_successfully",
+                "entities_generated"
+            ]
+        },
+        "usage": {
+            "type": "object",
+            "properties": {
+                "input_tokens": {
+                    "type": "integer"
+                },
+                "output_tokens": {
+                    "type": "integer"
+                },
+                "total_tokens": {
+                    "type": "integer"
+                },
+                "cost_usd": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "input_tokens",
+                "output_tokens",
+                "total_tokens",
+                "cost_usd"
+            ]
+        },
+        "validation": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "checks_run": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "failures": {
+                    "type": "array",
+                    "items": {}
+                },
+                "auto_corrected": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "status",
+                "checks_run",
+                "failures",
+                "auto_corrected"
+            ]
+        },
+        "performance": {
+            "type": "object",
+            "properties": {
+                "latency_ms": {
+                    "type": "integer"
+                },
+                "ttft_ms": {
+                    "type": "integer"
+                },
+                "queued_at": {
+                    "type": "string"
+                },
+                "started_at": {
+                    "type": "string"
+                },
+                "completed_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "latency_ms",
+                "ttft_ms",
+                "queued_at",
+                "started_at",
+                "completed_at"
+            ]
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "triggered_by": {
+                    "type": "string"
+                },
+                "trigger_event": {
+                    "type": "string"
+                },
+                "environment": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "triggered_by",
+                "trigger_event",
+                "environment",
+                "created_at"
+            ]
+        }
+    },
+    "required": [
+        "response_id",
+        "trip_id",
+        "prompt_id",
+        "request",
+        "response",
+        "usage",
+        "validation",
+        "performance",
+        "meta"
+    ]
+}

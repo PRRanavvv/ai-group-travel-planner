@@ -1,0 +1,128 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "user_id": {
+            "type": "string"
+        },
+        "auth": {
+            "type": "object",
+            "properties": {
+                "provider": {
+                    "type": "string"
+                },
+                "provider_uid": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "email_verified": {
+                    "type": "boolean"
+                },
+                "password_hash": {
+                    "type": "null"
+                },
+                "mfa_enabled": {
+                    "type": "boolean"
+                },
+                "last_login_at": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "provider",
+                "provider_uid",
+                "email",
+                "email_verified",
+                "password_hash",
+                "mfa_enabled",
+                "last_login_at",
+                "created_at"
+            ]
+        },
+        "profile": {
+            "type": "object",
+            "properties": {
+                "display_name": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "avatar_url": {
+                    "type": "string"
+                },
+                "bio": {
+                    "type": "string"
+                },
+                "home_city": {
+                    "type": "string"
+                },
+                "home_country_code": {
+                    "type": "string"
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "language_code": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "display_name",
+                "username",
+                "avatar_url",
+                "bio",
+                "home_city",
+                "home_country_code",
+                "timezone",
+                "language_code"
+            ]
+        },
+        "role": {
+            "type": "object",
+            "properties": {
+                "system_role": {
+                    "type": "string"
+                },
+                "is_verified": {
+                    "type": "boolean"
+                },
+                "is_premium": {
+                    "type": "boolean"
+                },
+                "premium_until": {
+                    "type": "null"
+                }
+            },
+            "required": [
+                "system_role",
+                "is_verified",
+                "is_premium",
+                "premium_until"
+            ]
+        },
+        "travel_profile_id": {
+            "type": "string"
+        },
+        "status": {
+            "type": "string"
+        },
+        "updated_at": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "user_id",
+        "auth",
+        "profile",
+        "role",
+        "travel_profile_id",
+        "status",
+        "updated_at"
+    ]
+}

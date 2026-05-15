@@ -1,0 +1,251 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "ranking_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "context": {
+            "type": "string"
+        },
+        "scope": {
+            "type": "string"
+        },
+        "scope_ref": {
+            "type": "string"
+        },
+        "candidates": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "entity_id": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "rank": {
+                            "type": "integer"
+                        },
+                        "score": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "entity_id",
+                        "type",
+                        "rank",
+                        "score"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "entity_id": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "rank": {
+                            "type": "integer"
+                        },
+                        "score": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "entity_id",
+                        "type",
+                        "rank",
+                        "score"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "entity_id": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "rank": {
+                            "type": "integer"
+                        },
+                        "score": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "entity_id",
+                        "type",
+                        "rank",
+                        "score"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "entity_id": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "rank": {
+                            "type": "integer"
+                        },
+                        "score": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "entity_id",
+                        "type",
+                        "rank",
+                        "score"
+                    ]
+                }
+            ]
+        },
+        "factors": {
+            "type": "object",
+            "properties": {
+                "weights_version": {
+                    "type": "string"
+                },
+                "applied_weights": {
+                    "type": "object",
+                    "properties": {
+                        "group_fit": {
+                            "type": "number"
+                        },
+                        "budget_fit": {
+                            "type": "number"
+                        },
+                        "popularity": {
+                            "type": "number"
+                        },
+                        "uniqueness": {
+                            "type": "number"
+                        },
+                        "timing_fit": {
+                            "type": "number"
+                        },
+                        "weather_fit": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "group_fit",
+                        "budget_fit",
+                        "popularity",
+                        "uniqueness",
+                        "timing_fit",
+                        "weather_fit"
+                    ]
+                },
+                "hard_filters_applied": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "group_size": {
+                    "type": "integer"
+                },
+                "budget_constraint": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "weights_version",
+                "applied_weights",
+                "hard_filters_applied",
+                "group_size",
+                "budget_constraint"
+            ]
+        },
+        "output": {
+            "type": "object",
+            "properties": {
+                "selected_count": {
+                    "type": "integer"
+                },
+                "rejected_count": {
+                    "type": "integer"
+                },
+                "rejection_reasons": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "entity_id": {
+                                    "type": "string"
+                                },
+                                "reason": {
+                                    "type": "string"
+                                },
+                                "threshold": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "entity_id",
+                                "reason",
+                                "threshold"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "selected_count",
+                "rejected_count",
+                "rejection_reasons"
+            ]
+        },
+        "ai_response_id": {
+            "type": "string"
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "algorithm": {
+                    "type": "string"
+                },
+                "generated_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "algorithm",
+                "generated_at"
+            ]
+        }
+    },
+    "required": [
+        "ranking_id",
+        "trip_id",
+        "context",
+        "scope",
+        "scope_ref",
+        "candidates",
+        "factors",
+        "output",
+        "ai_response_id",
+        "meta"
+    ]
+}

@@ -1,0 +1,318 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "consensus_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "itinerary_id": {
+            "type": "string"
+        },
+        "round": {
+            "type": "integer"
+        },
+        "version": {
+            "type": "integer"
+        },
+        "participation": {
+            "type": "object",
+            "properties": {
+                "total_members": {
+                    "type": "integer"
+                },
+                "voted_members": {
+                    "type": "integer"
+                },
+                "participation_rate": {
+                    "type": "number"
+                },
+                "pending_vote_from": {
+                    "type": "array",
+                    "items": {}
+                }
+            },
+            "required": [
+                "total_members",
+                "voted_members",
+                "participation_rate",
+                "pending_vote_from"
+            ]
+        },
+        "common_interests": {
+            "type": "object",
+            "properties": {
+                "agreed_activities": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "entity_id": {
+                                    "type": "string"
+                                },
+                                "agreement": {
+                                    "type": "number"
+                                },
+                                "yes": {
+                                    "type": "integer"
+                                },
+                                "no": {
+                                    "type": "integer"
+                                },
+                                "maybe": {
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "entity_id",
+                                "agreement",
+                                "yes",
+                                "no",
+                                "maybe"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "entity_id": {
+                                    "type": "string"
+                                },
+                                "agreement": {
+                                    "type": "number"
+                                },
+                                "yes": {
+                                    "type": "integer"
+                                },
+                                "no": {
+                                    "type": "integer"
+                                },
+                                "maybe": {
+                                    "type": "integer"
+                                }
+                            },
+                            "required": [
+                                "entity_id",
+                                "agreement",
+                                "yes",
+                                "no",
+                                "maybe"
+                            ]
+                        }
+                    ]
+                },
+                "shared_interest_tags": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "shared_budget_range": {
+                    "type": "object",
+                    "properties": {
+                        "currency": {
+                            "type": "string"
+                        },
+                        "min": {
+                            "type": "integer"
+                        },
+                        "max": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "currency",
+                        "min",
+                        "max"
+                    ]
+                }
+            },
+            "required": [
+                "agreed_activities",
+                "shared_interest_tags",
+                "shared_budget_range"
+            ]
+        },
+        "conflicts": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "conflict_id": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "entity_id": {
+                            "type": "string"
+                        },
+                        "severity": {
+                            "type": "string"
+                        },
+                        "blocker": {
+                            "type": "boolean"
+                        },
+                        "conflicting_users": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "resolution": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "conflict_id",
+                        "type",
+                        "entity_id",
+                        "severity",
+                        "blocker",
+                        "conflicting_users",
+                        "description",
+                        "resolution"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "conflict_id": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "severity": {
+                            "type": "string"
+                        },
+                        "blocker": {
+                            "type": "boolean"
+                        },
+                        "conflicting_users": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "description": {
+                            "type": "string"
+                        },
+                        "resolution": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "conflict_id",
+                        "type",
+                        "severity",
+                        "blocker",
+                        "conflicting_users",
+                        "description",
+                        "resolution"
+                    ]
+                }
+            ]
+        },
+        "agreement_scores": {
+            "type": "object",
+            "properties": {
+                "overall": {
+                    "type": "number"
+                },
+                "by_category": {
+                    "type": "object",
+                    "properties": {
+                        "activities": {
+                            "type": "number"
+                        },
+                        "accommodation": {
+                            "type": "number"
+                        },
+                        "transport": {
+                            "type": "number"
+                        },
+                        "budget": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "activities",
+                        "accommodation",
+                        "transport",
+                        "budget"
+                    ]
+                },
+                "trend": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "overall",
+                "by_category",
+                "trend"
+            ]
+        },
+        "resolution": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "auto_resolved": {
+                    "type": "integer"
+                },
+                "manual_review_needed": {
+                    "type": "integer"
+                },
+                "recommended_action": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "status",
+                "auto_resolved",
+                "manual_review_needed",
+                "recommended_action"
+            ]
+        },
+        "computed_at": {
+            "type": "string"
+        },
+        "expires_at": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "consensus_id",
+        "trip_id",
+        "itinerary_id",
+        "round",
+        "version",
+        "participation",
+        "common_interests",
+        "conflicts",
+        "agreement_scores",
+        "resolution",
+        "computed_at",
+        "expires_at"
+    ]
+}

@@ -1,0 +1,50 @@
+# Destination & Retrieval Schemas: Architecture & Design Principles
+
+This is the **Knowledge Base Layer**. While previous schemas focused on trips, users, and social signals, this layer represents what the AI actually *knows* about the world.
+
+## 1. Core Principles & The Knowledge Hierarchy
+
+There are three primary levels of knowledge, plus an audit layer:
+1.  **Destinations (City Level):** Broad city or region-level data (e.g., Manali, Kyoto). 1 Destination → Many Curated Places.
+2.  **Curated Places (Place Level):** Specific venues, hotels, or spots within a destination (e.g., Johnson’s Café). 1 Place → Many Embedding Docs.
+3.  **Embedding Docs (Chunk Level):** The actual chunks of knowledge residing in the vector database.
+4.  **Retrieval Context (Call Level):** An audit log of exactly what the RAG (Retrieval-Augmented Generation) pipeline fetched for a specific AI call.
+
+### Critical Distinction: Activity ≠ Curated Place
+A **Curated Place** is an eternal knowledge base entity. It exists globally, gets embedded, and is retrieved by the AI. An **Activity** is a trip-scoped instance of that place ("Johnson's Café on Day 2 of Trip X, scheduled at 9am, costs ₹500"). One is static knowledge; the other is active planning. They are strictly separate schemas linked by a `curated_place_id`.
+
+---
+
+## 2. Schema Breakdown
+
+### Destinations
+*   **`avoid_if_you_want[]`:** Explicit negative matching tags. Captures what a destination is *not* to prevent bad matches (e.g., recommending Manali to someone who wants a beach).
+*   **`seasons[].notes`:** Human-readable curation. Critical context like "landslide risk in monsoon" that structured fields can't capture, injected directly into AI prompts.
+*   **`cost_index` (0–1):** A normalized, cross-destination budget signal. Allows the budget estimator to scale estimates before trip-specific pricing is available (e.g., Manali at 0.35 vs Tokyo at 0.82).
+*   **`trending_score`:** Recency-weighted popularity. Differentiates a destination surging now from one that peaked three years ago.
+*   **`embedding_id`:** Bridges the destination to the vector store, enabling broad queries like "find destinations similar to what this group loved before."
+*   **Design Decisions:** Purely city-level metadata. No hotel or activity lists are embedded here (those live in Curated Places). `best_months` is an integer array for direct queryability.
+
+### Curated Places
+*   **`insider_tip`:** A first-class field, separated from general descriptions. This is the highest-value RAG content (e.g., "order the apple pie at sunrise"). The RAG system is built to retrieve these specific tips, differentiating the app from standard map data.
+*   **`tourist_trap` (Boolean):** A hard editorial block. If true, the place is *never* recommended. It is a binary exclusion, not a negative weight.
+*   **`hidden_gem` (Boolean):** An explicit flag, not inferred from popularity. Powers specific "off the beaten path" UX filters.
+*   **`chunk_ids[]`:** Pointers to the chunks of content existing in the vector store. This keeps the place schema lean while the full text lives in Embedding Docs.
+*   **`curated_by`:** Establishes editorial provenance so AI-generated content and human-editorial content can be weighted differently in retrieval.
+*   **Design Decisions:** Mood tags ("cozy + scenic") are separated from functional activity tags ("cafe + breakfast"). Absolutely no trip or user data lives here.
+
+### Embedding Docs
+*   **`source.content_hash`:** A SHA-256 hash of the source text at embed time. Drives the re-embedding queue efficiently: if a Curated Place updates, compare the hash; if different, flag `needs_reembedding=true` without scanning the whole corpus.
+*   **`retrieval_tags`:** A metadata filter layer mirrored into the vector DB (e.g., Pinecone). Filters the candidate pool (e.g., `destination="Manali" AND price="budget"`) *before* semantic scoring, dramatically improving precision.
+*   **`vector_ids[]`:** The IDs in the external vector DB. This schema acts as the map connecting internal metadata to external vectors.
+*   **`overlap_tokens`:** A critical chunking detail (e.g., 20-token overlap between adjacent chunks). Prevents queries landing near chunk boundaries from retrieving incomplete context.
+*   **Design Decisions:** Chunk text is stored here for human inspection and auditing. The actual mathematical vector lives *only* in the vector DB.
+
+### Retrieval Context
+*   **`used_in_prompt`:** Retrieved ≠ used. Token budgets force cutoffs. A chunk might be retrieved but ultimately excluded from the prompt. This distinction is critical for accurate attribution.
+*   **Two Thresholds:** 
+    *   `relevance_threshold` (e.g., 0.70): "Worth considering."
+    *   `inclusion_threshold` (e.g., 0.80): "Worth injecting." The gap is an evaluation buffer for low-confidence documents.
+*   **`retrieval_contributed`:** A flag to measure if RAG actually improved the output versus a baseline. Crucial for future A/B testing and ROI analysis on the knowledge base.
+*   **`feedback_score`:** Populated when a user rates an itinerary, closing the loop to improve chunking or embeddings based on real-world success.
+*   **Design Decisions:** The full list of retrieved documents is stored, answering the analytical question "Why wasn't X retrieved?" Filters applied are recorded to ensure reproducible retrieval. `tourist_trap:false` is baked in as a hard system-level exclusion.

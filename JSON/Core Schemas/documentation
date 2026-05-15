@@ -1,0 +1,34 @@
+# WayFinder Data Schema Architecture & Design Principles
+
+This document outlines the core architectural decisions and design patterns behind the WayFinder data schemas. The architecture is intentionally designed to separate concerns, optimize AI pipeline processing, and simplify complex state management (such as group consensus).
+
+## 1. User Identity vs. Travel Profile
+
+The user data model is explicitly split into two distinct documents linked by a reference ID: `user` (Identity Layer) and `travel_profile` (Behavior Layer).
+
+**Why Two Documents?**
+* **Access Control & Security:** The `users` collection owns identity and authentication data. It changes rarely and requires tight access control.
+* **Decoupled AI Operations:** `travel_profiles` house the behavioral data that the AI, consensus engine, and budget estimator actively read. By separating this from auth data, travel behavior can be cached and queried independently without ever exposing sensitive information.
+* **Separation of Concerns:** Group trip logic references the `travel_profile_id` and never needs to interact with the auth layer.
+
+## 2. Travel Profile Patterns
+
+The `travel_profile` schema employs several key patterns to ensure data is highly actionable for the AI pipeline:
+
+* **Weighted Interests:** The `interests` field is split into `primary`, `secondary`, and `excluded`. This provides the AI with weighted signals rather than a flat list. "Excluded" acts as a hard filter, while primary and secondary interests serve as scoring weights.
+* **Structured Budget Object:** The `budget` is structured as a comprehensive object (currency, range, per-unit, and flexibility) rather than a simple numeric value. This enables the AI to reason accurately about cost estimation across users with varying currencies and trip lengths.
+* **UI/Product Metadata Isolation:** A `meta` block inside the travel profile holds data like `completeness_score` and usage stats. This is purely for UI/product logic and is explicitly excluded from the AI pipeline.
+* **Standardized Enums:** All enum values are formatted as lowercase `snake_case` strings instead of integers. This ensures they are highly readable in logs and directly queryable in databases (like Firestore/Mongo) without requiring lookup tables.
+
+## 3. Trip Management: Solo vs. Group
+
+* **Separate Schema Documents:** Group and Solo trips are modeled as completely separate documents rather than relying on a type flag within a single schema. Their state machines are fundamentally different—Group trips involve voting, consensus, and locked states that do not exist in solo trips. Attempting to force both into one schema with nulled-out fields is considered an anti-pattern.
+* **Standalone Member Schema:** The Member schema lives in its own dedicated collection (`trip_members`), rather than being embedded within the trip document. This structure allows efficient queries such as "show all trips this user is part of" via a simple indexed query on `user_id`, bypassing the need to scan every trip document.
+
+## 4. Group Consensus & User Preferences
+
+* **Trip-Scoped Preferences:** The `user_preferences` schema is a trip-scoped snapshot, distinct from the overarching `travel_profile`. When a user joins a trip, their preferences are copied from their profile and can then diverge for that specific trip. This isolates the AI pipeline from live profile changes mid-trip and allows the group consensus engine to compare a frozen, stable set of preferences across all members.
+* **Mathematically Tractable Consensus:** The `activity_preferences` block within `user_preferences` utilizes 1–5 integer scores instead of boolean flags or free-text arrays. This is the critical design choice that makes group consensus mathematically tractable. The engine can calculate average scores across all members, weight them by `priority_weight`, and confidently surface activities that score highest for the group. Relying on tag arrays would require complex fuzzy matching logic instead of simple arithmetic.
+* **Isolated AI Metadata:** The `ai_context` block is intentionally the only place where AI pipeline metadata resides:
+    * `priority_weight`: Allows future features (e.g., "whose preferences matter more") to be seamlessly integrated without modifying the rest of the schema.
+    * `preference_hash`: Serves as a mechanism to detect if a user updates their `travel_profile` mid-trip, prompting them to re-sync. Without this hash, the AI might silently generate itineraries based on stale data.

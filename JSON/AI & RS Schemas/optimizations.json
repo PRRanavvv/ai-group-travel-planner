@@ -1,0 +1,281 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "optimization_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "itinerary_id": {
+            "type": "string"
+        },
+        "scope": {
+            "type": "string"
+        },
+        "objectives": {
+            "type": "object",
+            "properties": {
+                "primary": {
+                    "type": "string"
+                },
+                "weights": {
+                    "type": "object",
+                    "properties": {
+                        "minimize_travel_time": {
+                            "type": "number"
+                        },
+                        "minimize_cost": {
+                            "type": "number"
+                        },
+                        "maximize_satisfaction": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "minimize_travel_time",
+                        "minimize_cost",
+                        "maximize_satisfaction"
+                    ]
+                }
+            },
+            "required": [
+                "primary",
+                "weights"
+            ]
+        },
+        "travel_time": {
+            "type": "object",
+            "properties": {
+                "total_travel_mins": {
+                    "type": "integer"
+                },
+                "total_activity_mins": {
+                    "type": "integer"
+                },
+                "travel_to_activity_ratio": {
+                    "type": "number"
+                },
+                "longest_single_leg_mins": {
+                    "type": "integer"
+                },
+                "route_savings_mins": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "total_travel_mins",
+                "total_activity_mins",
+                "travel_to_activity_ratio",
+                "longest_single_leg_mins",
+                "route_savings_mins"
+            ]
+        },
+        "cost": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "total_estimated": {
+                    "type": "integer"
+                },
+                "per_person": {
+                    "type": "integer"
+                },
+                "breakdown": {
+                    "type": "object",
+                    "properties": {
+                        "accommodation": {
+                            "type": "integer"
+                        },
+                        "activities": {
+                            "type": "integer"
+                        },
+                        "food": {
+                            "type": "integer"
+                        },
+                        "transport": {
+                            "type": "integer"
+                        },
+                        "misc_buffer": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "accommodation",
+                        "activities",
+                        "food",
+                        "transport",
+                        "misc_buffer"
+                    ]
+                },
+                "budget_utilization": {
+                    "type": "number"
+                },
+                "within_budget": {
+                    "type": "boolean"
+                },
+                "savings_vs_naive": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "currency",
+                "total_estimated",
+                "per_person",
+                "breakdown",
+                "budget_utilization",
+                "within_budget",
+                "savings_vs_naive"
+            ]
+        },
+        "satisfaction": {
+            "type": "object",
+            "properties": {
+                "predicted_group_score": {
+                    "type": "number"
+                },
+                "per_member": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "user_id": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "user_id",
+                                "score"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "user_id": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "user_id",
+                                "score"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "user_id": {
+                                    "type": "string"
+                                },
+                                "score": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "user_id",
+                                "score"
+                            ]
+                        }
+                    ]
+                },
+                "lowest_member_score": {
+                    "type": "number"
+                },
+                "score_variance": {
+                    "type": "number"
+                },
+                "conflict_count": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "predicted_group_score",
+                "per_member",
+                "lowest_member_score",
+                "score_variance",
+                "conflict_count"
+            ]
+        },
+        "constraints_applied": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "convergence": {
+            "type": "object",
+            "properties": {
+                "iterations": {
+                    "type": "integer"
+                },
+                "converged": {
+                    "type": "boolean"
+                },
+                "final_delta": {
+                    "type": "number"
+                },
+                "compute_time_ms": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "iterations",
+                "converged",
+                "final_delta",
+                "compute_time_ms"
+            ]
+        },
+        "ai_response_id": {
+            "type": "string"
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "algorithm": {
+                    "type": "string"
+                },
+                "generated_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "algorithm",
+                "generated_at"
+            ]
+        }
+    },
+    "required": [
+        "optimization_id",
+        "trip_id",
+        "itinerary_id",
+        "scope",
+        "objectives",
+        "travel_time",
+        "cost",
+        "satisfaction",
+        "constraints_applied",
+        "convergence",
+        "ai_response_id",
+        "meta"
+    ]
+}

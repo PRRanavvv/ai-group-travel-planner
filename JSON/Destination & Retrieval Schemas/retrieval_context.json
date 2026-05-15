@@ -1,0 +1,278 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "retrieval_id": {
+            "type": "string"
+        },
+        "ai_response_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "query": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                },
+                "embedding_model": {
+                    "type": "string"
+                },
+                "filters_applied": {
+                    "type": "object",
+                    "properties": {
+                        "destination_id": {
+                            "type": "string"
+                        },
+                        "tags": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "price_tier": {
+                            "type": "array",
+                            "items": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "tourist_trap": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "destination_id",
+                        "tags",
+                        "price_tier",
+                        "tourist_trap"
+                    ]
+                }
+            },
+            "required": [
+                "text",
+                "embedding_model",
+                "filters_applied"
+            ]
+        },
+        "retrieved_docs": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "embedding_id": {
+                            "type": "string"
+                        },
+                        "chunk_id": {
+                            "type": "string"
+                        },
+                        "entity_id": {
+                            "type": "string"
+                        },
+                        "entity_type": {
+                            "type": "string"
+                        },
+                        "relevance_score": {
+                            "type": "number"
+                        },
+                        "rank": {
+                            "type": "integer"
+                        },
+                        "used_in_prompt": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "embedding_id",
+                        "chunk_id",
+                        "entity_id",
+                        "entity_type",
+                        "relevance_score",
+                        "rank",
+                        "used_in_prompt"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "embedding_id": {
+                            "type": "string"
+                        },
+                        "chunk_id": {
+                            "type": "string"
+                        },
+                        "entity_id": {
+                            "type": "string"
+                        },
+                        "entity_type": {
+                            "type": "string"
+                        },
+                        "relevance_score": {
+                            "type": "number"
+                        },
+                        "rank": {
+                            "type": "integer"
+                        },
+                        "used_in_prompt": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "embedding_id",
+                        "chunk_id",
+                        "entity_id",
+                        "entity_type",
+                        "relevance_score",
+                        "rank",
+                        "used_in_prompt"
+                    ]
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "embedding_id": {
+                            "type": "string"
+                        },
+                        "chunk_id": {
+                            "type": "string"
+                        },
+                        "entity_id": {
+                            "type": "string"
+                        },
+                        "entity_type": {
+                            "type": "string"
+                        },
+                        "relevance_score": {
+                            "type": "number"
+                        },
+                        "rank": {
+                            "type": "integer"
+                        },
+                        "used_in_prompt": {
+                            "type": "boolean"
+                        }
+                    },
+                    "required": [
+                        "embedding_id",
+                        "chunk_id",
+                        "entity_id",
+                        "entity_type",
+                        "relevance_score",
+                        "rank",
+                        "used_in_prompt"
+                    ]
+                }
+            ]
+        },
+        "stats": {
+            "type": "object",
+            "properties": {
+                "top_k_fetched": {
+                    "type": "integer"
+                },
+                "above_cutoff": {
+                    "type": "integer"
+                },
+                "injected_in_prompt": {
+                    "type": "integer"
+                },
+                "relevance_threshold": {
+                    "type": "number"
+                },
+                "inclusion_threshold": {
+                    "type": "number"
+                },
+                "token_budget_used": {
+                    "type": "integer"
+                },
+                "token_budget_limit": {
+                    "type": "integer"
+                },
+                "retrieval_latency_ms": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "top_k_fetched",
+                "above_cutoff",
+                "injected_in_prompt",
+                "relevance_threshold",
+                "inclusion_threshold",
+                "token_budget_used",
+                "token_budget_limit",
+                "retrieval_latency_ms"
+            ]
+        },
+        "outcome": {
+            "type": "object",
+            "properties": {
+                "entities_in_output": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "retrieval_contributed": {
+                    "type": "boolean"
+                },
+                "feedback_score": {
+                    "type": "null"
+                }
+            },
+            "required": [
+                "entities_in_output",
+                "retrieval_contributed",
+                "feedback_score"
+            ]
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "vector_db": {
+                    "type": "string"
+                },
+                "index_name": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "vector_db",
+                "index_name",
+                "created_at"
+            ]
+        }
+    },
+    "required": [
+        "retrieval_id",
+        "ai_response_id",
+        "trip_id",
+        "query",
+        "retrieved_docs",
+        "stats",
+        "outcome",
+        "meta"
+    ]
+}

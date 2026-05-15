@@ -1,0 +1,269 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "prompt_id": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "version": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string"
+        },
+        "use_case": {
+            "type": "string"
+        },
+        "content": {
+            "type": "object",
+            "properties": {
+                "system_prompt": {
+                    "type": "string"
+                },
+                "user_template": {
+                    "type": "string"
+                },
+                "variables": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "key": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "key",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "key": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "key",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "key": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "key",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "key": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "key",
+                                "type",
+                                "required"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "key": {
+                                    "type": "string"
+                                },
+                                "type": {
+                                    "type": "string"
+                                },
+                                "required": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "required": [
+                                "key",
+                                "type",
+                                "required"
+                            ]
+                        }
+                    ]
+                },
+                "output_format": {
+                    "type": "string"
+                },
+                "output_schema_ref": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "system_prompt",
+                "user_template",
+                "variables",
+                "output_format",
+                "output_schema_ref"
+            ]
+        },
+        "configuration": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "type": "string"
+                },
+                "temperature": {
+                    "type": "number"
+                },
+                "max_tokens": {
+                    "type": "integer"
+                },
+                "top_p": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "model",
+                "temperature",
+                "max_tokens",
+                "top_p"
+            ]
+        },
+        "ranking_weights": {
+            "type": "object",
+            "properties": {
+                "group_fit": {
+                    "type": "number"
+                },
+                "budget_fit": {
+                    "type": "number"
+                },
+                "popularity": {
+                    "type": "number"
+                },
+                "uniqueness": {
+                    "type": "number"
+                },
+                "timing_fit": {
+                    "type": "number"
+                },
+                "weather_fit": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "group_fit",
+                "budget_fit",
+                "popularity",
+                "uniqueness",
+                "timing_fit",
+                "weather_fit"
+            ]
+        },
+        "performance": {
+            "type": "object",
+            "properties": {
+                "avg_latency_ms": {
+                    "type": "integer"
+                },
+                "avg_total_tokens": {
+                    "type": "integer"
+                },
+                "success_rate": {
+                    "type": "number"
+                },
+                "avg_validation_score": {
+                    "type": "number"
+                },
+                "user_acceptance_rate": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "avg_latency_ms",
+                "avg_total_tokens",
+                "success_rate",
+                "avg_validation_score",
+                "user_acceptance_rate"
+            ]
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "parent_version": {
+                    "type": "string"
+                },
+                "changelog": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "deployed_at": {
+                    "type": "string"
+                },
+                "deprecated_at": {
+                    "type": "null"
+                }
+            },
+            "required": [
+                "parent_version",
+                "changelog",
+                "created_by",
+                "is_active",
+                "deployed_at",
+                "deprecated_at"
+            ]
+        }
+    },
+    "required": [
+        "prompt_id",
+        "name",
+        "version",
+        "type",
+        "use_case",
+        "content",
+        "configuration",
+        "ranking_weights",
+        "performance",
+        "meta"
+    ]
+}

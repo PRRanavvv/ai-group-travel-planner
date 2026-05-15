@@ -1,0 +1,262 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "preferences_id": {
+            "type": "string"
+        },
+        "user_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "source": {
+            "type": "string"
+        },
+        "budget": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "total_max": {
+                    "type": "integer"
+                },
+                "per_day_max": {
+                    "type": "integer"
+                },
+                "flexibility": {
+                    "type": "string"
+                },
+                "split_preference": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "currency",
+                "total_max",
+                "per_day_max",
+                "flexibility",
+                "split_preference"
+            ]
+        },
+        "travel_style": {
+            "type": "object",
+            "properties": {
+                "pace": {
+                    "type": "string"
+                },
+                "accommodation": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "transport": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "wake_up_time": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "pace",
+                "accommodation",
+                "transport",
+                "wake_up_time"
+            ]
+        },
+        "interests": {
+            "type": "object",
+            "properties": {
+                "must_do": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "nice_to_have": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "avoid": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "must_do",
+                "nice_to_have",
+                "avoid"
+            ]
+        },
+        "food": {
+            "type": "object",
+            "properties": {
+                "cuisines": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "dietary_restrictions": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "meal_budget_tier": {
+                    "type": "string"
+                },
+                "adventurousness": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "cuisines",
+                "dietary_restrictions",
+                "meal_budget_tier",
+                "adventurousness"
+            ]
+        },
+        "activity_preferences": {
+            "type": "object",
+            "properties": {
+                "outdoor": {
+                    "type": "integer"
+                },
+                "cultural": {
+                    "type": "integer"
+                },
+                "adventure_sports": {
+                    "type": "integer"
+                },
+                "nightlife": {
+                    "type": "integer"
+                },
+                "wellness": {
+                    "type": "integer"
+                },
+                "shopping": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "outdoor",
+                "cultural",
+                "adventure_sports",
+                "nightlife",
+                "wellness",
+                "shopping"
+            ]
+        },
+        "constraints": {
+            "type": "object",
+            "properties": {
+                "dislikes": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "accessibility_needs": {
+                    "type": "array",
+                    "items": {}
+                },
+                "max_walking_km_per_day": {
+                    "type": "integer"
+                },
+                "requires_wifi": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "dislikes",
+                "accessibility_needs",
+                "max_walking_km_per_day",
+                "requires_wifi"
+            ]
+        },
+        "ai_context": {
+            "type": "object",
+            "properties": {
+                "priority_weight": {
+                    "type": "number"
+                },
+                "preference_hash": {
+                    "type": "string"
+                },
+                "synced_from_profile_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "priority_weight",
+                "preference_hash",
+                "synced_from_profile_at"
+            ]
+        },
+        "updated_at": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "preferences_id",
+        "user_id",
+        "trip_id",
+        "source",
+        "budget",
+        "travel_style",
+        "interests",
+        "food",
+        "activity_preferences",
+        "constraints",
+        "ai_context",
+        "updated_at"
+    ]
+}

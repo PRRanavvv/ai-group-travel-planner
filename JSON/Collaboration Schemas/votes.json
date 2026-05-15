@@ -1,0 +1,88 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "vote_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "user_id": {
+            "type": "string"
+        },
+        "member_id": {
+            "type": "string"
+        },
+        "target": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "entity_id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "type",
+                "entity_id"
+            ]
+        },
+        "vote": {
+            "type": "object",
+            "properties": {
+                "value": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "number"
+                },
+                "intensity": {
+                    "type": "integer"
+                },
+                "note": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "value",
+                "weight",
+                "intensity",
+                "note"
+            ]
+        },
+        "context": {
+            "type": "object",
+            "properties": {
+                "round": {
+                    "type": "integer"
+                },
+                "phase": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "round",
+                "phase"
+            ]
+        },
+        "voted_at": {
+            "type": "string"
+        },
+        "updated_at": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "vote_id",
+        "trip_id",
+        "user_id",
+        "member_id",
+        "target",
+        "vote",
+        "context",
+        "voted_at",
+        "updated_at"
+    ]
+}

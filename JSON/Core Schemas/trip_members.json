@@ -1,0 +1,92 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "member_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "user_id": {
+            "type": "string"
+        },
+        "preferences_id": {
+            "type": "string"
+        },
+        "role": {
+            "type": "string"
+        },
+        "invite": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "invited_by": {
+                    "type": "string"
+                },
+                "invited_at": {
+                    "type": "string"
+                },
+                "responded_at": {
+                    "type": "string"
+                },
+                "method": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "status",
+                "invited_by",
+                "invited_at",
+                "responded_at",
+                "method"
+            ]
+        },
+        "permissions": {
+            "type": "object",
+            "properties": {
+                "can_edit_trip": {
+                    "type": "boolean"
+                },
+                "can_invite_members": {
+                    "type": "boolean"
+                },
+                "can_vote": {
+                    "type": "boolean"
+                },
+                "can_generate_itinerary": {
+                    "type": "boolean"
+                },
+                "can_lock_trip": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "can_edit_trip",
+                "can_invite_members",
+                "can_vote",
+                "can_generate_itinerary",
+                "can_lock_trip"
+            ]
+        },
+        "joined_at": {
+            "type": "string"
+        },
+        "last_active_at": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "member_id",
+        "trip_id",
+        "user_id",
+        "preferences_id",
+        "role",
+        "invite",
+        "permissions",
+        "joined_at",
+        "last_active_at"
+    ]
+}

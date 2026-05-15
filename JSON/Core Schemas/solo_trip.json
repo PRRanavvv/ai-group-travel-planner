@@ -1,0 +1,172 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "trip_id": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string"
+        },
+        "created_by": {
+            "type": "string"
+        },
+        "destination": {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string"
+                },
+                "country_code": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "object",
+                    "properties": {
+                        "lat": {
+                            "type": "number"
+                        },
+                        "lng": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "lat",
+                        "lng"
+                    ]
+                },
+                "place_id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "label",
+                "country_code",
+                "coordinates",
+                "place_id"
+            ]
+        },
+        "origin": {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string"
+                },
+                "country_code": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "object",
+                    "properties": {
+                        "lat": {
+                            "type": "number"
+                        },
+                        "lng": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "lat",
+                        "lng"
+                    ]
+                }
+            },
+            "required": [
+                "label",
+                "country_code",
+                "coordinates"
+            ]
+        },
+        "dates": {
+            "type": "object",
+            "properties": {
+                "start": {
+                    "type": "string"
+                },
+                "end": {
+                    "type": "string"
+                },
+                "duration_days": {
+                    "type": "integer"
+                },
+                "flexibility": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "start",
+                "end",
+                "duration_days",
+                "flexibility"
+            ]
+        },
+        "preferences_id": {
+            "type": "string"
+        },
+        "state": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "itinerary_generated": {
+                    "type": "boolean"
+                },
+                "locked_at": {
+                    "type": "null"
+                }
+            },
+            "required": [
+                "status",
+                "itinerary_generated",
+                "locked_at"
+            ]
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "cover_image_url": {
+                    "type": "null"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "title",
+                "cover_image_url",
+                "tags",
+                "created_at",
+                "updated_at"
+            ]
+        }
+    },
+    "required": [
+        "trip_id",
+        "type",
+        "created_by",
+        "destination",
+        "origin",
+        "dates",
+        "preferences_id",
+        "state",
+        "meta"
+    ]
+}

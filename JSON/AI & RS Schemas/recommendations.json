@@ -1,0 +1,238 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "recommendation_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "itinerary_id": {
+            "type": "string"
+        },
+        "context": {
+            "type": "string"
+        },
+        "entity_id": {
+            "type": "string"
+        },
+        "score": {
+            "type": "object",
+            "properties": {
+                "overall": {
+                    "type": "number"
+                },
+                "breakdown": {
+                    "type": "object",
+                    "properties": {
+                        "group_fit": {
+                            "type": "number"
+                        },
+                        "budget_fit": {
+                            "type": "number"
+                        },
+                        "popularity": {
+                            "type": "number"
+                        },
+                        "uniqueness": {
+                            "type": "number"
+                        },
+                        "timing_fit": {
+                            "type": "number"
+                        },
+                        "weather_fit": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "group_fit",
+                        "budget_fit",
+                        "popularity",
+                        "uniqueness",
+                        "timing_fit",
+                        "weather_fit"
+                    ]
+                },
+                "weights_version": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "overall",
+                "breakdown",
+                "weights_version"
+            ]
+        },
+        "reasoning": {
+            "type": "object",
+            "properties": {
+                "summary": {
+                    "type": "string"
+                },
+                "positive_signals": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "negative_signals": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "trade_off": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "summary",
+                "positive_signals",
+                "negative_signals",
+                "trade_off"
+            ]
+        },
+        "compatibility": {
+            "type": "object",
+            "properties": {
+                "group_consensus_score": {
+                    "type": "number"
+                },
+                "per_member": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "user_id": {
+                                    "type": "string"
+                                },
+                                "fit_score": {
+                                    "type": "number"
+                                },
+                                "conflicts": {
+                                    "type": "array",
+                                    "items": {}
+                                }
+                            },
+                            "required": [
+                                "user_id",
+                                "fit_score",
+                                "conflicts"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "user_id": {
+                                    "type": "string"
+                                },
+                                "fit_score": {
+                                    "type": "number"
+                                },
+                                "conflicts": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "string"
+                                        }
+                                    ]
+                                }
+                            },
+                            "required": [
+                                "user_id",
+                                "fit_score",
+                                "conflicts"
+                            ]
+                        },
+                        {
+                            "type": "object",
+                            "properties": {
+                                "user_id": {
+                                    "type": "string"
+                                },
+                                "fit_score": {
+                                    "type": "number"
+                                },
+                                "conflicts": {
+                                    "type": "array",
+                                    "items": {}
+                                }
+                            },
+                            "required": [
+                                "user_id",
+                                "fit_score",
+                                "conflicts"
+                            ]
+                        }
+                    ]
+                },
+                "conflict_count": {
+                    "type": "integer"
+                },
+                "blocker_exists": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "group_consensus_score",
+                "per_member",
+                "conflict_count",
+                "blocker_exists"
+            ]
+        },
+        "status": {
+            "type": "string"
+        },
+        "rank_position": {
+            "type": "integer"
+        },
+        "ai_response_id": {
+            "type": "string"
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "generated_at": {
+                    "type": "string"
+                },
+                "expires_at": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "generated_at",
+                "expires_at",
+                "updated_at"
+            ]
+        }
+    },
+    "required": [
+        "recommendation_id",
+        "trip_id",
+        "itinerary_id",
+        "context",
+        "entity_id",
+        "score",
+        "reasoning",
+        "compatibility",
+        "status",
+        "rank_position",
+        "ai_response_id",
+        "meta"
+    ]
+}

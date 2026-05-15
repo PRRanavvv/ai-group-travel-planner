@@ -1,0 +1,53 @@
+# AI & Recommendation System Schemas: Architecture & Design Principles
+
+This schema layer is highly critical because it serves three distinct consumers simultaneously: the AI pipeline (which needs structured inputs/outputs), the product (which needs audit trails and trust signals), and the future retrieval system (which needs embeddings, scores, and lineage). A mistake in this layer propagates everywhere.
+
+## 1. Core Principles & Pipeline
+
+* **Sequential Pipeline:** These five schemas form a linear sequence: `preferences` → `ranking` → `optimization` → `itinerary assembly` → `recommendation scoring`. Each schema's output serves as the input to the next. The `ai_response_id` is the thread that links every document back to the single API call that triggered the chain.
+* **Weights Versioning & Snapshotting:** The Prompt Schema owns the ranking weights—they are not hardcoded in application logic or configs. When you A/B test versions, the weights travel with the prompt. Furthermore, the `applied_weights` block is **copied** onto the ranking document at compute time. Reference alone isn't enough for reproducibility; you need to know exactly what weights produced a specific ranking six months ago, even if the prompt weights update tomorrow.
+* **Rawlsian Optimization:** The Optimization Schema tracks the `lowest_member_score` separately from the group average. A 0.95 average with one member at 0.40 is considered a failed trip. The optimizer protects the worst-off member, penalizing high variance.
+* **Feedback Loop:** Prompts track `user_acceptance_rate` (the percentage of itineraries approved without regeneration). This is the primary quality metric—more meaningful than validation pass rate—and closes the feedback loop.
+* **Trust & Safety Buffers:** The optimization cost breakdown always includes a `misc_buffer` (7–10% of the total). An itinerary at 79% budget utilization with a visible contingency buffer is inherently more trustworthy than one landing exactly at 100%.
+* **Storage Pointers:** The AI Response Schema stores a storage pointer (`raw_output_ref`), never raw output inline. A full itinerary response can be several KB, so the schema holds metadata only.
+
+---
+
+## 2. Schema Breakdown
+
+### Recommendations
+* **`score.breakdown`:** Six sub-dimensions instead of one opaque score. Each maps to a weight in the prompt schema, making the "why" traceable.
+* **`compatibility`:** A `per_member` array of individual fit scores. Allows the UI to instantly surface "2/3 members love this" without extra computation.
+* **`blocker_exists`:** A binary hard-exclusion flag. If true, the recommendation is never surfaced, regardless of its score.
+* **`expires_at`:** Staleness is a first-class concern. A recommendation for a Manali hotel in July becomes worthless by August.
+* **Design Decisions:** `reasoning.positive_signals` and `negative_signals` are arrays directly renderable in a "Why this?" UI panel. No entity data is embedded, and no UI state (e.g., `is_expanded`) is stored here.
+
+### AI Responses
+* **`raw_output_ref`:** Storage pointer; full AI output is never stored inline in the document.
+* **`system_prompt_hash`:** A SHA-256 hash of the actual system prompt used. Detects prompt drift outside the versioning system.
+* **`ttft_ms`:** Time-to-first-token. Drives streaming UX decisions (e.g., showing a loading skeleton earlier if TTFT is high).
+* **`validation`:** Deterministic, post-generation checks (schema validity, date logic, budget bounds, no duplicate activities), cleanly separated from subjective AI quality.
+* **`cost_usd`:** Stored per call to enable cost dashboards and per-trip cost attribution without querying the model API billing.
+* **Design Decisions:** Five cleanly separated blocks: request, response, usage, validation, and performance. `entities_generated` counts provide a quick audit. No retry logic is stored here (belongs in a queue).
+
+### Prompts
+* **`ranking_weights`:** Lives directly in this schema. When A/B testing `v2.3` vs `v2.4`, weights travel with the version, ensuring scores are always reproducible.
+* **`variables[]`:** A typed input contract. The pipeline validates against this before calling the API.
+* **`user_acceptance_rate`:** The most direct prompt quality signal.
+* **`parent_version`:** A lineage chain. Every version knows its parent, enabling a full rollback tree and diffs between versions.
+* **Design Decisions:** The `performance` block is continually updated from real `ai_responses` data. Only one prompt is active per `use_case`. Prompt content is never hardcoded in the application.
+
+### Rankings
+* **Hard Filters vs Weights:** 
+  * `hard_filters_applied`: Exclusions that run before scoring (binary).
+  * `applied_weights`: Weights that happen second (continuous). Both are stored for auditing ("Why is X missing?").
+* **`rejection_reasons`:** Why candidates didn't make the cut, including the score threshold that triggered rejection. Powers a "More options" UI.
+* **`scope` & `scope_ref`:** Polymorphic references allowing rankings to be applied to a single day or a full itinerary.
+* **Design Decisions:** The full candidate list is stored, not just the winner. This enables "show more options" features without re-running the ranking engine.
+
+### Optimizations
+* **`lowest_member_score` & `score_variance`:** As noted, high variance means someone is being dragged along. Surfaces in the UI as a fairness indicator.
+* **`travel_to_activity_ratio`:** The key efficiency metric. If >0.40 (more than 40% of the day in transit), the optimizer is prompted to re-route.
+* **`savings_vs_naive`:** INR/USD saved versus an unoptimized first pass. Serves as a strong trust signal in the UI ("We saved your group ₹8,400").
+* **`convergence`:** Tracks iterations and convergence status. Useful debugging tool for when optimization doesn't stabilize.
+* **Design Decisions:** Three objective dimensions (minimize time, minimize cost, maximize satisfaction) are trackable independently. Only the final optimized state is stored; intermediate iterations live only in compute logs.

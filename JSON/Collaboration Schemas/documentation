@@ -1,0 +1,71 @@
+# Collaboration Schemas: Architecture & Design Principles
+
+The Collaboration layer is architecturally distinct from the AI/Itinerary schemas. While previous layers managed AI outputs and structured plans, this layer handles **human signals**. 
+
+The design philosophy shifts significantly here:
+*   **Latency is critical:** Votes and chat must feel real-time.
+*   **Write frequency is higher:** Users vote and chat frequently.
+*   **Soft-delete is non-negotiable:** Any social content must be retained for auditing and context, even when hidden from the UI.
+
+## 1. Core Principles
+
+*   **Nuanced Signals:** Votes are not just binary or ternary (yes/no/maybe). An `intensity` field (1–5) captures the *conviction* behind a vote, allowing the consensus engine to distinguish between an indifferent "maybe" and a deeply torn "maybe."
+*   **Computed Consensus:** The Consensus schema is a system-generated document, constantly recomputed as votes arrive. It acts as the single source of truth for group alignment and explicitly tracks the group's convergence trend over time.
+*   **Differentiated Conflicts:** The system distinguishes between "hard" conflicts (blockers dictated by hard-excluded preferences) and "soft" conflicts (preference mismatches resolvable by group voting).
+*   **Entity-Attached Context:** Chat is heavily structured. A comment pinned to a specific activity (`stay_001`) provides infinitely more value to the AI and group than a generic chat stream.
+
+---
+
+## 2. Schema Breakdown
+
+### Votes
+*   **`intensity` (1–5):** The critical nuance field. Intensity modifies the vote weight at consensus time (e.g., yes=1.0, maybe=0.5, no=0.0 multiplied by intensity signals).
+*   **`weight`:** Role-derived. Co-organizers get a 1.5× weight *only* in tie-breaking scenarios (when the `consensus_score` sits in the 0.45–0.55 band).
+*   **`round`:** Trips have multiple voting rounds (e.g., Round 1 for initial activities, Round 2 for final approval). Each round triggers separate consensus computations.
+*   **Polymorphic Target:** The `target` block uses a `type` + `entity_id` pattern. One vote schema handles activities, stays, hotels, and transport without needing separate collections.
+*   **Design Decisions:**
+    *   Votes are updated in-place (one doc per user per entity per round) rather than append-only event-sourcing for the MVP.
+    *   The `note` field feeds discussions; a vote with a note automatically creates an attached discussion comment.
+    *   No historical vote tracking within a single round.
+
+### Consensus
+*   **`version`:** Increments on every recomputation. Downstream systems check this version before using cached consensus. (A consensus of 2 members at v1 ≠ 3 members at v4).
+*   **`severity` (hard | soft):** Critical for auto-resolution logic. Hard = no vote can override. Soft = overridable by group vote.
+*   **`trend`:** "Improving," "stable," or "declining" across rounds. A declining trend allows the UI to intervene early: "Your group is having trouble agreeing..."
+*   **`shared_budget_range`:** The strict *intersection* of all members' budget ranges, not the average. (e.g., Member A: ₹50k–₹100k, Member B: ₹80k–₹150k = Shared: ₹80k–₹100k).
+*   **Design Decisions:**
+    *   Computed purely by the engine; never manually written.
+    *   `conflict.resolution` provides four clear strategies for the AI: remove, override, alternative, or vote.
+    *   `pending_vote_from` directly drives notification/nudge logic.
+
+### Invites
+*   **`invitee.user_id = null`:** Starts null to prevent assuming the invitee has an account before they actually join.
+*   **`single_use`:** Differentiates targeted email invites (true) from shareable group join links (false).
+*   **`method`:** Tracks the origin (e.g., `qr_code` for in-person). Future-proofs the schema for new UX surfaces.
+*   **`inviter.member_id`:** Checked at the time of *acceptance*, ensuring the inviter hasn't lost their invite privileges since sending the link.
+*   **Design Decisions:**
+    *   Human-readable tokens (e.g., "MAN-XK9-2026") are preferred over UUID hashes for easier verbal sharing and trust.
+    *   `role_on_join` is pre-set by the inviter.
+    *   `scope.type` allows future "invite to a single day" features.
+
+### Discussions
+*   **`context` (Entity Attachment):** The major product differentiator. Context ties messages directly to entities (e.g., `activity`, `stay`, `day_plan`), surfacing structured feedback inline on itinerary cards.
+*   **`is_decision`:** Marks a message as a recorded group decision, generating a filterable decision log without requiring a separate database collection.
+*   **`is_pinned`:** Keeps important safety notes or organizer announcements at the top of an entity's discussion panel.
+*   **`is_deleted`:** Social content is soft-deleted. Audit logs, moderation, and disputes require data retention.
+*   **Design Decisions:**
+    *   `reactions[].count` is denormalized for fast real-time UI updates.
+    *   `thread_id` groups replies cleanly.
+    *   `mentions[]` allows direct notification triggers without parsing text at send-time.
+    *   Full-text search indexing is left to dedicated services (e.g., Algolia), not the database schema.
+
+---
+
+## 3. Critical Implementation Details
+
+1.  **The Vote Compound Index:**
+    You must set up a compound index on `(trip_id, target.entity_id, user_id, context.round)` from day one. The consensus engine tallies votes using `WHERE trip_id = X AND entity_id = Y AND round = 1`. Without this index, every vote event triggers a full collection scan.
+2.  **Consensus Version as a Cache Invalidator:**
+    Every downstream system (ranking, optimization, itinerary assembly) *must* store the `consensus_id` + `version` they were computed against. When consensus increments, older downstream outputs are stale and must be flagged for regeneration. This prevents subtle bugs where an itinerary is built on outdated consensus after a new member joins and votes.
+3.  **General vs. Attached Chat:**
+    The trip-level "General Chat" feed is simply a discussion where `context.type = "general"` and `entity_id = null`. Everything else is entity-attached. The UI aggregates the general feed or filters by `entity_id`. This eliminates the need for separate "chat" and "comments" collections.

@@ -1,0 +1,231 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "activity_id": {
+            "type": "string"
+        },
+        "location": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "object",
+                    "properties": {
+                        "lat": {
+                            "type": "number"
+                        },
+                        "lng": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "lat",
+                        "lng"
+                    ]
+                },
+                "place_id": {
+                    "type": "string"
+                },
+                "indoor_outdoor": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "address",
+                "coordinates",
+                "place_id",
+                "indoor_outdoor"
+            ]
+        },
+        "category": {
+            "type": "string"
+        },
+        "subcategory": {
+            "type": "string"
+        },
+        "tags": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "timing": {
+            "type": "object",
+            "properties": {
+                "best_time_of_day": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "opens_at": {
+                    "type": "string"
+                },
+                "closes_at": {
+                    "type": "string"
+                },
+                "recommended_start": {
+                    "type": "string"
+                },
+                "duration_mins": {
+                    "type": "integer"
+                },
+                "booking_required": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "best_time_of_day",
+                "opens_at",
+                "closes_at",
+                "recommended_start",
+                "duration_mins",
+                "booking_required"
+            ]
+        },
+        "pricing": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "entry_fee": {
+                    "type": "integer"
+                },
+                "estimated_spend": {
+                    "type": "integer"
+                },
+                "pricing_tier": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "currency",
+                "entry_fee",
+                "estimated_spend",
+                "pricing_tier",
+                "notes"
+            ]
+        },
+        "weather_suitability": {
+            "type": "object",
+            "properties": {
+                "ideal": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "acceptable": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "avoid": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "indoor_fallback_id": {
+                    "type": "null"
+                }
+            },
+            "required": [
+                "ideal",
+                "acceptable",
+                "avoid",
+                "indoor_fallback_id"
+            ]
+        },
+        "ai_meta": {
+            "type": "object",
+            "properties": {
+                "recommendation_score": {
+                    "type": "number"
+                },
+                "popularity_score": {
+                    "type": "number"
+                },
+                "uniqueness_score": {
+                    "type": "number"
+                },
+                "group_fit_score": {
+                    "type": "null"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "embedding_id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "recommendation_score",
+                "popularity_score",
+                "uniqueness_score",
+                "group_fit_score",
+                "source",
+                "embedding_id"
+            ]
+        },
+        "created_at": {
+            "type": "string"
+        },
+        "updated_at": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "activity_id",
+        "location",
+        "category",
+        "subcategory",
+        "tags",
+        "timing",
+        "pricing",
+        "weather_suitability",
+        "ai_meta",
+        "created_at",
+        "updated_at"
+    ]
+}

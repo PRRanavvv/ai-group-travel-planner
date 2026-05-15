@@ -1,0 +1,186 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "itinerary_id": {
+      "type": "string"
+    },
+    "trip_id": {
+      "type": "string"
+    },
+    "trip_type": {
+      "type": "string"
+    },
+    "version": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "total_days": {
+          "type": "integer"
+        },
+        "activity_count": {
+          "type": "integer"
+        },
+        "destinations_covered": {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "highlight_tags": {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "estimated_cost": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "type": "string"
+            },
+            "total": {
+              "type": "integer"
+            },
+            "per_person": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "currency",
+            "total",
+            "per_person"
+          ]
+        }
+      },
+      "required": [
+        "total_days",
+        "activity_count",
+        "destinations_covered",
+        "highlight_tags",
+        "estimated_cost"
+      ]
+    },
+    "day_plan_ids": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "stay_ids": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "ai_meta": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "generated_at": {
+          "type": "string"
+        },
+        "preferences_snapshot_ids": {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "consensus_score": {
+          "type": "number"
+        },
+        "optimization_objective": {
+          "type": "string"
+        },
+        "prompt_version": {
+          "type": "string"
+        },
+        "generation_time_ms": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "model",
+        "generated_at",
+        "preferences_snapshot_ids",
+        "consensus_score",
+        "optimization_objective",
+        "prompt_version",
+        "generation_time_ms"
+      ]
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "approved_by": {
+          "type": "null"
+        },
+        "approved_at": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "created_at",
+        "updated_at",
+        "approved_by",
+        "approved_at"
+      ]
+    }
+  },
+  "required": [
+    "itinerary_id",
+    "trip_id",
+    "trip_type",
+    "version",
+    "status",
+    "summary",
+    "day_plan_ids",
+    "stay_ids",
+    "ai_meta",
+    "meta"
+  ]
+}

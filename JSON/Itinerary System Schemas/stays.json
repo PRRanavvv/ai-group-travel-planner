@@ -1,0 +1,252 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "stay_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "itinerary_id": {
+            "type": "string"
+        },
+        "hotel": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "brand": {
+                    "type": "null"
+                },
+                "star_rating": {
+                    "type": "integer"
+                },
+                "property_type": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "object",
+                    "properties": {
+                        "lat": {
+                            "type": "number"
+                        },
+                        "lng": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "lat",
+                        "lng"
+                    ]
+                },
+                "place_id": {
+                    "type": "string"
+                },
+                "contact": {
+                    "type": "object",
+                    "properties": {
+                        "phone": {
+                            "type": "string"
+                        },
+                        "website": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "phone",
+                        "website"
+                    ]
+                }
+            },
+            "required": [
+                "name",
+                "brand",
+                "star_rating",
+                "property_type",
+                "address",
+                "coordinates",
+                "place_id",
+                "contact"
+            ]
+        },
+        "booking": {
+            "type": "object",
+            "properties": {
+                "check_in_date": {
+                    "type": "string"
+                },
+                "check_out_date": {
+                    "type": "string"
+                },
+                "nights": {
+                    "type": "integer"
+                },
+                "check_in_time": {
+                    "type": "string"
+                },
+                "check_out_time": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "booking_ref": {
+                    "type": "null"
+                },
+                "platform": {
+                    "type": "null"
+                }
+            },
+            "required": [
+                "check_in_date",
+                "check_out_date",
+                "nights",
+                "check_in_time",
+                "check_out_time",
+                "status",
+                "booking_ref",
+                "platform"
+            ]
+        },
+        "pricing": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "per_night": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "per_person_per_night": {
+                    "type": "integer"
+                },
+                "includes_breakfast": {
+                    "type": "boolean"
+                },
+                "pricing_source": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "currency",
+                "per_night",
+                "total",
+                "per_person_per_night",
+                "includes_breakfast",
+                "pricing_source"
+            ]
+        },
+        "amenities": {
+            "type": "object",
+            "properties": {
+                "wifi": {
+                    "type": "boolean"
+                },
+                "parking": {
+                    "type": "boolean"
+                },
+                "pool": {
+                    "type": "boolean"
+                },
+                "gym": {
+                    "type": "boolean"
+                },
+                "restaurant": {
+                    "type": "boolean"
+                },
+                "room_service": {
+                    "type": "boolean"
+                },
+                "air_conditioning": {
+                    "type": "boolean"
+                },
+                "pet_friendly": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "wifi",
+                "parking",
+                "pool",
+                "gym",
+                "restaurant",
+                "room_service",
+                "air_conditioning",
+                "pet_friendly"
+            ]
+        },
+        "ratings": {
+            "type": "object",
+            "properties": {
+                "overall": {
+                    "type": "number"
+                },
+                "cleanliness": {
+                    "type": "number"
+                },
+                "location": {
+                    "type": "number"
+                },
+                "value": {
+                    "type": "number"
+                },
+                "total_reviews": {
+                    "type": "integer"
+                },
+                "source": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "overall",
+                "cleanliness",
+                "location",
+                "value",
+                "total_reviews",
+                "source"
+            ]
+        },
+        "ai_meta": {
+            "type": "object",
+            "properties": {
+                "recommendation_score": {
+                    "type": "number"
+                },
+                "group_fit_score": {
+                    "type": "number"
+                },
+                "budget_alignment": {
+                    "type": "string"
+                },
+                "selected_reason": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "recommendation_score",
+                "group_fit_score",
+                "budget_alignment",
+                "selected_reason"
+            ]
+        }
+    },
+    "required": [
+        "stay_id",
+        "trip_id",
+        "itinerary_id",
+        "hotel",
+        "booking",
+        "pricing",
+        "amenities",
+        "ratings",
+        "ai_meta"
+    ]
+}

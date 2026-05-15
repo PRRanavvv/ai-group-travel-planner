@@ -1,0 +1,192 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "day_plan_id": {
+            "type": "string"
+        },
+        "itinerary_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "day_number": {
+            "type": "integer"
+        },
+        "date": {
+            "type": "string"
+        },
+        "theme": {
+            "type": "string"
+        },
+        "summary": {
+            "type": "string"
+        },
+        "activity_ids": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "transport_ids": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "stay_id": {
+            "type": "string"
+        },
+        "schedule": {
+            "type": "object",
+            "properties": {
+                "wake_up_time": {
+                    "type": "string"
+                },
+                "first_activity_at": {
+                    "type": "string"
+                },
+                "estimated_end_time": {
+                    "type": "string"
+                },
+                "free_time_slots": {
+                    "type": "array",
+                    "items": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "from": {
+                                    "type": "string"
+                                },
+                                "to": {
+                                    "type": "string"
+                                },
+                                "label": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "from",
+                                "to",
+                                "label"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "wake_up_time",
+                "first_activity_at",
+                "estimated_end_time",
+                "free_time_slots"
+            ]
+        },
+        "optimization": {
+            "type": "object",
+            "properties": {
+                "total_distance_km": {
+                    "type": "number"
+                },
+                "total_travel_mins": {
+                    "type": "integer"
+                },
+                "walking_km": {
+                    "type": "number"
+                },
+                "pace_rating": {
+                    "type": "string"
+                },
+                "estimated_cost": {
+                    "type": "object",
+                    "properties": {
+                        "currency": {
+                            "type": "string"
+                        },
+                        "activities": {
+                            "type": "integer"
+                        },
+                        "food": {
+                            "type": "integer"
+                        },
+                        "transport": {
+                            "type": "integer"
+                        },
+                        "total": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "currency",
+                        "activities",
+                        "food",
+                        "transport",
+                        "total"
+                    ]
+                }
+            },
+            "required": [
+                "total_distance_km",
+                "total_travel_mins",
+                "walking_km",
+                "pace_rating",
+                "estimated_cost"
+            ]
+        },
+        "ai_meta": {
+            "type": "object",
+            "properties": {
+                "optimization_score": {
+                    "type": "number"
+                },
+                "satisfaction_estimate": {
+                    "type": "number"
+                },
+                "weather_contingency": {
+                    "type": "boolean"
+                },
+                "route_optimized": {
+                    "type": "boolean"
+                },
+                "notes": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "optimization_score",
+                "satisfaction_estimate",
+                "weather_contingency",
+                "route_optimized",
+                "notes"
+            ]
+        }
+    },
+    "required": [
+        "day_plan_id",
+        "itinerary_id",
+        "trip_id",
+        "day_number",
+        "date",
+        "theme",
+        "summary",
+        "activity_ids",
+        "transport_ids",
+        "stay_id",
+        "schedule",
+        "optimization",
+        "ai_meta"
+    ]
+}

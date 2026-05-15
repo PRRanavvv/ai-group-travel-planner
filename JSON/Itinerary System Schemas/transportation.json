@@ -1,0 +1,216 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "transport_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "itinerary_id": {
+            "type": "string"
+        },
+        "day_plan_id": {
+            "type": "string"
+        },
+        "sequence": {
+            "type": "integer"
+        },
+        "segment": {
+            "type": "object",
+            "properties": {
+                "from": {
+                    "type": "object",
+                    "properties": {
+                        "label": {
+                            "type": "string"
+                        },
+                        "coordinates": {
+                            "type": "object",
+                            "properties": {
+                                "lat": {
+                                    "type": "number"
+                                },
+                                "lng": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "lat",
+                                "lng"
+                            ]
+                        },
+                        "place_id": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "label",
+                        "coordinates",
+                        "place_id",
+                        "type"
+                    ]
+                },
+                "to": {
+                    "type": "object",
+                    "properties": {
+                        "label": {
+                            "type": "string"
+                        },
+                        "coordinates": {
+                            "type": "object",
+                            "properties": {
+                                "lat": {
+                                    "type": "number"
+                                },
+                                "lng": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "lat",
+                                "lng"
+                            ]
+                        },
+                        "place_id": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "label",
+                        "coordinates",
+                        "place_id",
+                        "type"
+                    ]
+                }
+            },
+            "required": [
+                "from",
+                "to"
+            ]
+        },
+        "mode": {
+            "type": "string"
+        },
+        "sub_mode": {
+            "type": "string"
+        },
+        "timing": {
+            "type": "object",
+            "properties": {
+                "departure_at": {
+                    "type": "string"
+                },
+                "arrival_at": {
+                    "type": "string"
+                },
+                "duration_mins": {
+                    "type": "integer"
+                },
+                "is_overnight": {
+                    "type": "boolean"
+                },
+                "buffer_mins": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "departure_at",
+                "arrival_at",
+                "duration_mins",
+                "is_overnight",
+                "buffer_mins"
+            ]
+        },
+        "pricing": {
+            "type": "object",
+            "properties": {
+                "currency": {
+                    "type": "string"
+                },
+                "per_person": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "pricing_source": {
+                    "type": "string"
+                },
+                "booking_url": {
+                    "type": "null"
+                }
+            },
+            "required": [
+                "currency",
+                "per_person",
+                "total",
+                "pricing_source",
+                "booking_url"
+            ]
+        },
+        "booking": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "platform": {
+                    "type": "null"
+                },
+                "booking_ref": {
+                    "type": "null"
+                }
+            },
+            "required": [
+                "status",
+                "platform",
+                "booking_ref"
+            ]
+        },
+        "ai_meta": {
+            "type": "object",
+            "properties": {
+                "recommendation_score": {
+                    "type": "number"
+                },
+                "alternatives_count": {
+                    "type": "integer"
+                },
+                "selected_reason": {
+                    "type": "string"
+                },
+                "co2_kg_per_person": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "recommendation_score",
+                "alternatives_count",
+                "selected_reason",
+                "co2_kg_per_person"
+            ]
+        }
+    },
+    "required": [
+        "transport_id",
+        "trip_id",
+        "itinerary_id",
+        "day_plan_id",
+        "sequence",
+        "segment",
+        "mode",
+        "sub_mode",
+        "timing",
+        "pricing",
+        "booking",
+        "ai_meta"
+    ]
+}

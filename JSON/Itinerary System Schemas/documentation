@@ -1,0 +1,69 @@
+# Itinerary System Schemas: Architecture & Design Principles
+
+The Itinerary System forms the core of the AI's generation output, user UI rendering, and future retrieval/re-ranking operations. The schema design heavily impacts scalability, caching, and state management.
+
+## 1. Core Principles
+
+### Three Concern Layers
+Every output document rigidly separates data into three distinct layers to avoid mixing UI, product, and AI logic (a common mistake in AI-output systems):
+1. **`schedule` / `location` (UI Layer):** Drives the visual timeline, cards, and mapping.
+2. **`optimization` (Product Layer):** Cost, distance, travel time, and pace. Used for budget tracking and pace warnings.
+3. **`ai_meta` (AI / Analytics Layer):** Generation context, scores, embeddings, and audit trails.
+
+### Platform-Wide Conventions
+* **`pricing_source`**: A cross-cutting pattern across Stays, Transportation, and Activities. It defines a trust escalation ladder: `ai_estimate` → `live_api` → `user_confirmed`. This tells the UI which confidence indicator to display and signals the system when a document needs re-fetching.
+* **`selected_reason`**: Included on every AI-chosen entity (hotel, transport, activity). This powers the "Why this?" transparency feature for free, costing only one sentence of generation but significantly boosting user trust.
+* **`buffer_mins`**: A safety valve for the scheduling system, currently heavily utilized in transportation. Calculated as `activity_end + travel_duration + buffer`. It absorbs delays and prevents them from cascading throughout the entire day's schedule.
+* **`embedding_id`**: A hook on entities (like Activity) for the future retrieval layer (RAG). It enables vector store queries like "find activities similar to what this group liked," bypassing structured field queries.
+
+---
+
+## 2. Schema Breakdown
+
+### Itineraries
+The top-level document representing a specific iteration of a trip.
+* **Primary Key (`itinerary_id`)**: Multiple versions can exist per trip. Older versions are archived, never overwritten.
+* **Ordered References**: `day_plan_ids[]` and `stay_ids[]` are arrays where the index position dictates the chronological order.
+* **`version`**: Kept as an integer (not a timestamp) to enable clean "show diff between v1 and v2" product features.
+* **`ai_meta.preferences_snapshot_ids`**: Records exactly which preference documents were fed to the AI. This is vital for auditing and ensuring re-generation parity.
+
+### Day Plans
+* **Array Ordering**: `activity_ids[]` order matters; index position = chronological order in the day.
+* **`schedule` (UI Rendering)**: Includes wake time, start time, end time, and explicit free time slots surfaced for spontaneous exploration. (Never used in the AI pipeline).
+* **`optimization` (Product Logic)**: Distance, travel time, pace rating, and cost broken down by category (enables per-category budget tracking).
+* **`ai_meta.satisfaction_estimate`**: A predicted group fit score useful for analytics, like finding "which day is most contested."
+* **Design Decisions**:
+  * `trip_id` is denormalized to allow querying all days for a trip without hitting the itinerary document.
+  * `weather_contingency` flag marks days requiring pre-planned fallback activities.
+  * No activity details are embedded; only IDs are stored and fetched separately.
+
+### Activities
+Activities are global, reusable entities, explicitly not scoped to a single trip or embedded in day plans.
+* **Global Scope**: No `trip_id`. A popular spot appears once in the database and is referenced many times. This prevents duplication, aggregates global popularity signals, and enables a standalone activity catalogue/browse feature. RAG retrieval operates directly on this collection.
+* **`ai_meta.group_fit_score`**: Kept `null` globally. Group fit is computed at trip-time from member preferences and stored in the `day_plan` context, never on the activity itself.
+* **`weather.indoor_fallback_id`**: Links to an alternative activity, allowing the AI to automatically swap it in during bad weather.
+* **Design Decisions**:
+  * Three distinct score dimensions (recommendation, popularity, uniqueness) provide a richer ranking signal.
+  * `best_time_of_day` is an array (an activity can be optimal at multiple times).
+  * `weather_suitability` features three tiers: ideal, acceptable, and avoid.
+
+### Stays
+* **Booking Lifecycle**: `booking.status` defaults to "suggested" (AI recommends, user books externally). The schema tracks the journey all the way to confirmed.
+* **`budget_alignment`**: A four-level signal (not just over/under). E.g., "significantly_over" triggers a UI warning nudge without outright blocking the recommendation.
+* **Amenities as Flat Booleans**: Stored flat (e.g., `wifi: true`) rather than nested arrays. This enables simple, fast indexed queries.
+* **Design Decisions**:
+  * `nights` is denormalized to avoid recomputing `check_out - check_in` on every read.
+  * `per_person_per_night` is stored directly for group billing displays.
+  * `ratings.source` is tracked (internal vs. external like Google) as provenance matters.
+  * No room type details or image arrays for the MVP (images will use CDN URL lists once the media pipeline exists).
+
+### Transportations
+* **Segments over Monoliths**: A single journey (e.g., Delhi to Manali) is broken into segments (e.g., flight to Kullu, cab to Manali). Each segment has its own mode, pricing, and booking status. `sequence` orders them within the `day_plan`.
+* **Typed Endpoints**: `segment.from` and `segment.to` use typed endpoints (e.g., "airport", "hotel") to enable smart UI rendering (showing an airport icon instead of a generic pin).
+* **Transparency & Sustainability**:
+  * `alternatives_count`: Surfaces how many options the AI evaluated (e.g., "2 alternatives considered").
+  * `co2_kg_per_person`: Seeds sustainability scoring for future features without current overhead.
+* **Design Decisions**:
+  * `mode` is used for logic, while `sub_mode` is for display (e.g., "Volvo Bus").
+  * `is_overnight` flag alerts the day plan scheduler that the transport spans two calendar days.
+  * No flight/train numbers stored for the MVP; the booking platform handles this post-handoff.

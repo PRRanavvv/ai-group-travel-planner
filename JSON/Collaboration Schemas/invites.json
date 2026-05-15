@@ -1,0 +1,140 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "invite_id": {
+            "type": "string"
+        },
+        "trip_id": {
+            "type": "string"
+        },
+        "token": {
+            "type": "string"
+        },
+        "invite_url": {
+            "type": "string"
+        },
+        "inviter": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "string"
+                },
+                "member_id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "user_id",
+                "member_id"
+            ]
+        },
+        "invitee": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "null"
+                },
+                "display_name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "email",
+                "user_id",
+                "display_name"
+            ]
+        },
+        "method": {
+            "type": "string"
+        },
+        "status": {
+            "type": "object",
+            "properties": {
+                "current": {
+                    "type": "string"
+                },
+                "sent_at": {
+                    "type": "string"
+                },
+                "responded_at": {
+                    "type": "null"
+                },
+                "expires_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "current",
+                "sent_at",
+                "responded_at",
+                "expires_at"
+            ]
+        },
+        "permissions": {
+            "type": "object",
+            "properties": {
+                "role_on_join": {
+                    "type": "string"
+                },
+                "can_invite_others": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "role_on_join",
+                "can_invite_others"
+            ]
+        },
+        "scope": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "single_use": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "type",
+                "single_use"
+            ]
+        },
+        "meta": {
+            "type": "object",
+            "properties": {
+                "resend_count": {
+                    "type": "integer"
+                },
+                "last_resent_at": {
+                    "type": "null"
+                },
+                "created_at": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "resend_count",
+                "last_resent_at",
+                "created_at"
+            ]
+        }
+    },
+    "required": [
+        "invite_id",
+        "trip_id",
+        "token",
+        "invite_url",
+        "inviter",
+        "invitee",
+        "method",
+        "status",
+        "permissions",
+        "scope",
+        "meta"
+    ]
+}
