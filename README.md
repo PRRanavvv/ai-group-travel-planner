@@ -167,6 +167,10 @@ The main AI architecture, recommendation logic, retrieval flow, ranking system, 
 
 [docs/WAYFINDER_AI_PIPELINE_DOCUMENTATION.md](docs/WAYFINDER_AI_PIPELINE_DOCUMENTATION.md)
 
+The local mock implementation for testing retrieval, scoring, optimization, itinerary JSON generation, and validation is available in:
+
+[mock_ai_pipeline/](mock_ai_pipeline/)
+
 ---
 
 # 🎯 Long-Term Goals

@@ -709,9 +709,100 @@ MVP shape:
   "validation": {
     "status": "valid",
     "warnings": []
+  },
+  "reliability": {
+    "confidenceScore": 0.87,
+    "groundingStrength": 0.91,
+    "retrievalCoverage": 0.78,
+    "fallbackUsed": false
   }
 }
 ```
+
+## Confidence and Reliability Metadata
+
+WayFinder should attach confidence metadata to every generated itinerary and, later, to every individual recommendation.
+
+This lets the product handle uncertainty instead of hiding it. A low-confidence trip can show warnings, request more input, use fallback planning, or flag the output for review.
+
+### Reliability Object
+
+```json
+{
+  "confidenceScore": 0.87,
+  "groundingStrength": 0.91,
+  "retrievalCoverage": 0.78,
+  "rankingConfidence": 0.84,
+  "constraintSatisfaction": 0.96,
+  "fallbackUsed": false,
+  "fallbackReason": null,
+  "warnings": []
+}
+```
+
+### Field Definitions
+
+| Field | Meaning |
+| --- | --- |
+| `confidenceScore` | Overall confidence that the itinerary is useful, realistic, and aligned with the user intent. |
+| `groundingStrength` | How strongly the itinerary is grounded in retrieved place records instead of generic generation. |
+| `retrievalCoverage` | Whether retrieval found enough relevant candidates across stays, food, activities, transport, and backups. |
+| `rankingConfidence` | How clearly the top-ranked candidates beat weaker alternatives. |
+| `constraintSatisfaction` | How well the itinerary satisfies hard and soft constraints after validation. |
+| `fallbackUsed` | Whether the system had to relax filters, use generic defaults, or produce a partial itinerary. |
+| `fallbackReason` | Why fallback was needed, such as sparse destination data or too many constraints. |
+| `warnings` | User-safe warnings that can be shown in the frontend or used for debugging. |
+
+### Scoring Guidance
+
+The overall confidence score should be computed from system signals, not guessed by the LLM.
+
+Recommended MVP formula:
+
+```text
+confidenceScore =
+  0.30 * groundingStrength +
+  0.25 * retrievalCoverage +
+  0.20 * constraintSatisfaction +
+  0.15 * rankingConfidence +
+  0.10 * validationQuality
+```
+
+Confidence bands:
+
+| Score | Meaning | Product Behavior |
+| --- | --- | --- |
+| 0.85 to 1.00 | Strong | Show normally. |
+| 0.70 to 0.84 | Usable | Show with light caveats if needed. |
+| 0.50 to 0.69 | Weak | Show warnings and suggest refinement. |
+| Below 0.50 | Unsafe | Do not present as final; retry or request more input. |
+
+### Example Low-Confidence Warning
+
+```json
+{
+  "confidenceScore": 0.62,
+  "groundingStrength": 0.54,
+  "retrievalCoverage": 0.48,
+  "fallbackUsed": true,
+  "fallbackReason": "Only 4 curated activity records were available for this destination.",
+  "warnings": [
+    "Some itinerary blocks use general destination guidance because curated data coverage is low."
+  ]
+}
+```
+
+### Why This Matters
+
+Reliability metadata supports:
+
+- Low-confidence warnings
+- Fallback itineraries
+- Debugging bad recommendations
+- Ranking quality evaluation
+- A/B testing scoring weights
+- Human review queues
+- Future model and retrieval benchmarking
 
 ## Validation Logic Planning
 
@@ -888,6 +979,81 @@ Recommended build order:
 7. Add route/time/fatigue optimization.
 8. Add proposal impact scoring and localized regeneration.
 
+## Memory and Preference Learning Layer
+
+This is not MVP-critical, but it is a major future intelligence layer.
+
+WayFinder should eventually learn from repeated user and group behavior. If a user consistently upvotes cafes, scenic viewpoints, relaxed pacing, and low-walking plans, future recommendations should adapt automatically.
+
+### Learning Signals
+
+Useful signals:
+
+- Upvoted proposals
+- Downvoted proposals
+- Approved itinerary changes
+- Removed activities
+- Regenerated activities
+- Skipped activity types
+- Saved trips
+- Manual edits
+- Time spent viewing recommendations
+- Repeated destination or trip-style choices
+
+### Preference Memory Object
+
+```json
+{
+  "userId": "user_123",
+  "learnedPreferences": {
+    "cafes": 0.82,
+    "scenic_places": 0.76,
+    "museums": 0.31,
+    "nightlife": 0.22,
+    "slow_itineraries": 0.88,
+    "public_transport": 0.64
+  },
+  "confidence": {
+    "cafes": 0.74,
+    "slow_itineraries": 0.81
+  },
+  "lastUpdated": "2026-05-15"
+}
+```
+
+### How Memory Should Affect Ranking
+
+Memory should adjust ranking softly, not override explicit trip input.
+
+```text
+final_preference_score =
+  0.70 * current_trip_preference_match +
+  0.20 * learned_user_preference_match +
+  0.10 * group_history_match
+```
+
+Hard constraints always win over memory. If the user says "avoid cafes" on a specific trip, the system should obey that even if the user previously liked cafes.
+
+### Group-Level Learning
+
+For recurring groups, WayFinder can learn group patterns:
+
+- This group likes relaxed mornings.
+- This group accepts one premium experience per trip.
+- This group downvotes nightlife.
+- This group prefers scenic food spots over crowded landmarks.
+
+Group memory should only be used when the same members or mostly overlapping members plan together again.
+
+### Privacy and Control
+
+Preference learning should be transparent and controllable:
+
+- Users can reset learned preferences.
+- Users can disable memory.
+- Sensitive preferences should not be inferred aggressively.
+- Memory should explain itself: "Recommended because you often prefer scenic cafes and relaxed pacing."
+
 ## MVP Decision Boundaries
 
 For MVP, WayFinder should implement:
@@ -908,6 +1074,7 @@ Post-MVP:
 - Weather-aware auto-adjustment
 - Hotel and transport booking agents
 - Long-term user memory
+- Preference learning from votes and edits
 - Multi-city planning
 - Advanced route optimization
 
@@ -922,4 +1089,3 @@ WayFinder should always be able to answer:
 5. What would break if it changed?
 
 If the system cannot answer those questions, the recommendation is not intelligent enough yet.
-
