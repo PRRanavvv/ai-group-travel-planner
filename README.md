@@ -161,6 +161,14 @@ This enables scalable AI orchestration and future expansion into retrieval and r
 
 ---
 
+# AI System Blueprint
+
+The main AI architecture, recommendation logic, retrieval flow, ranking system, optimization modes, validation rules, and hallucination-prevention strategy are documented in:
+
+[docs/WAYFINDER_AI_PIPELINE_DOCUMENTATION.md](docs/WAYFINDER_AI_PIPELINE_DOCUMENTATION.md)
+
+---
+
 # 🎯 Long-Term Goals
 
 WayFinder is being designed as more than just a travel app.
