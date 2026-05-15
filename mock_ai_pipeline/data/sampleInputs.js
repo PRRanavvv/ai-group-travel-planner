@@ -5,6 +5,12 @@ const sampleInputs = {
     budget: "balanced",
     interests: ["heritage", "food"]
   },
+  jaipur_fuzzy: {
+    destination: "Jaipur",
+    days: 2,
+    budget: "balanced",
+    interests: ["heriage", "caffes", "scenic"]
+  },
   goa: {
     destination: "Goa",
     days: 2,
@@ -22,4 +28,3 @@ const sampleInputs = {
 };
 
 module.exports = sampleInputs;
-
