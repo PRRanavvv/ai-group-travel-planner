@@ -15,13 +15,17 @@ const generateItineraryJson = ({ tripInput, optimizedDays, retrievalMeta }) => {
       title: item.name,
       description: item.description,
       type: item.type,
+      tags: item.tags,
       slot: item.slot,
       bestTime: item.bestTime,
       area: item.area,
       budgetTier: item.budgetTier,
       estimatedCost: item.estimatedCost,
       score: item.score,
-      source: "mock_retrieval",
+      semanticScore: item.semanticScore,
+      source: "semantic_retrieval",
+      retrievalReason: item.retrievalReason,
+      semanticSignals: item.semanticSignals,
       selectionReason: item.selectionReason,
       scoreBreakdown: item.scoreBreakdown
     }))
@@ -72,7 +76,7 @@ const buildSubtitle = (day, optimizationMode) => {
 const calculateGroundingStrength = (days) => {
   const activities = days.flatMap((day) => day.activities);
   if (!activities.length) return 0;
-  const grounded = activities.filter((activity) => activity.placeId && activity.source === "mock_retrieval");
+  const grounded = activities.filter((activity) => activity.placeId && activity.source === "semantic_retrieval");
   return grounded.length / activities.length;
 };
 

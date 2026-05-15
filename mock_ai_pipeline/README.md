@@ -1,16 +1,26 @@
 # Mock AI Pipeline
 
-This folder is a local, dependency-free prototype of the WayFinder recommendation pipeline.
+This folder is a local, dependency-free AI systems sandbox for the WayFinder recommendation pipeline.
+
+It is designed to be:
+
+- a reusable intelligence prototype
+- a recommendation experimentation layer
+- a retrieval and ranking evaluation environment
+- a future backend service module starting point
 
 It turns a simple trip request into a grounded itinerary by running:
 
 ```text
-input
-  -> retrieve mock candidate places
-  -> score candidates
-  -> optimize sequencing
-  -> generate structured itinerary JSON
-  -> validate output
+user input
+  -> preference extraction
+  -> semantic retrieval and fuzzy matching
+  -> candidate ranking
+  -> optimization
+  -> validation
+  -> explanation generation
+  -> reliability and evaluation metrics
+  -> structured JSON output
 ```
 
 ## Run
@@ -25,8 +35,15 @@ Named demos:
 
 ```bash
 node mock_ai_pipeline/runMockPipeline.js jaipur
+node mock_ai_pipeline/runMockPipeline.js jaipur_fuzzy
 node mock_ai_pipeline/runMockPipeline.js goa
 node mock_ai_pipeline/runMockPipeline.js manali
+```
+
+Run all sample scenarios as an evaluation pass:
+
+```bash
+node mock_ai_pipeline/runEvaluation.js
 ```
 
 Default demo input:
@@ -55,3 +72,13 @@ The goal is to test WayFinder's decision logic before heavy implementation:
 - Does sequencing avoid obvious itinerary mistakes?
 - Does the final JSON match the product schema?
 - Do validation errors reveal weak planning logic early?
+
+## Current Capabilities
+
+- Local semantic retrieval using token expansion and synonym matching
+- Fuzzy matching for imperfect user interests such as `heriage` or `caffes`
+- Weighted ranking by semantic fit, preference match, budget, distance, time, diversity, quality, and weather
+- Simple sequencing into morning, afternoon, and evening slots
+- Validation for duplicate places, missing fields, timing order, high travel, high fatigue, and best-time mismatch
+- Explanation generation for retrieval, ranking, optimization, validation, and activity selection
+- Evaluation metrics including retrieval coverage, average semantic score, top-candidate utilization, interest coverage, diversity, validation warnings, and quality gate status

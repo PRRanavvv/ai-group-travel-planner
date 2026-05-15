@@ -2,8 +2,9 @@ const { budgetRank, budgetTarget, clamp } = require("./utils");
 
 const weightsByMode = {
   balanced: {
+    semantic: 0.1,
     preference: 0.25,
-    budget: 0.2,
+    budget: 0.15,
     distance: 0.15,
     timeFit: 0.15,
     diversity: 0.1,
@@ -11,17 +12,19 @@ const weightsByMode = {
     weather: 0.05
   },
   cheapest: {
+    semantic: 0.08,
     preference: 0.2,
-    budget: 0.35,
-    distance: 0.2,
+    budget: 0.34,
+    distance: 0.18,
     timeFit: 0.1,
     diversity: 0.05,
     quality: 0.05,
     weather: 0.05
   },
   luxury: {
+    semantic: 0.08,
     preference: 0.2,
-    budget: 0.1,
+    budget: 0.07,
     distance: 0.1,
     timeFit: 0.15,
     diversity: 0.05,
@@ -30,18 +33,20 @@ const weightsByMode = {
     comfort: 0.1
   },
   time_efficient: {
+    semantic: 0.08,
     preference: 0.2,
     budget: 0.05,
-    distance: 0.3,
-    timeFit: 0.25,
+    distance: 0.28,
+    timeFit: 0.24,
     diversity: 0.05,
     quality: 0.1,
     weather: 0.05
   },
   fuel_efficient: {
+    semantic: 0.08,
     preference: 0.15,
     budget: 0.05,
-    distance: 0.35,
+    distance: 0.32,
     timeFit: 0.1,
     diversity: 0.05,
     quality: 0.05,
@@ -108,6 +113,7 @@ const scoreCandidates = (candidates, tripInput) => {
   return candidates
     .map((place) => {
       const breakdown = {
+        semantic: Math.round((place.semanticScore || 0) * 100),
         preference: scorePreference(place, interests),
         budget: scoreBudget(place, tripInput.budget),
         distance: scoreDistanceProxy(place, candidates),
@@ -119,10 +125,12 @@ const scoreCandidates = (candidates, tripInput) => {
         clustering: scoreDistanceProxy(place, candidates)
       };
 
-      const score = Object.entries(weights).reduce(
+      const totalWeight = Object.values(weights).reduce((sum, weight) => sum + weight, 0);
+      const weightedScore = Object.entries(weights).reduce(
         (sum, [factor, weight]) => sum + (breakdown[factor] || 0) * weight,
         0
       );
+      const score = weightedScore / totalWeight;
 
       return {
         ...place,
@@ -147,4 +155,3 @@ const buildSelectionReason = (place, breakdown) => {
 };
 
 module.exports = scoreCandidates;
-
