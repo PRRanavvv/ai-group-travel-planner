@@ -46,6 +46,12 @@ Run all sample scenarios as an evaluation pass:
 node mock_ai_pipeline/runEvaluation.js
 ```
 
+Run partial regeneration scenarios:
+
+```bash
+node mock_ai_pipeline/runPartialRegenerationScenarios.js
+```
+
 Default demo input:
 
 ```json
@@ -82,3 +88,9 @@ The goal is to test WayFinder's decision logic before heavy implementation:
 - Validation for duplicate places, missing fields, timing order, high travel, high fatigue, and best-time mismatch
 - Explanation generation for retrieval, ranking, optimization, validation, and activity selection
 - Evaluation metrics including retrieval coverage, average semantic score, top-candidate utilization, interest coverage, diversity, validation warnings, and quality gate status
+- Partial regeneration for activity replacement, day regeneration, budget changes, weather disruption, opening-hours conflicts, travel delays, and locked activity preservation
+
+## Architecture Notes
+
+- AI pipeline blueprint: `docs/WAYFINDER_AI_PIPELINE_DOCUMENTATION.md`
+- Partial regeneration architecture: `mock_ai_pipeline/PARTIAL_REGENERATION_ARCHITECTURE.md`

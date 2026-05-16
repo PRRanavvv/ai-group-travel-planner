@@ -11,6 +11,21 @@ const minutesToTime = (minutes) => {
   return `${String(hours12).padStart(2, "0")}:${String(mins).padStart(2, "0")} ${suffix}`;
 };
 
+const parseDisplayTime = (displayTime) => {
+  if (!displayTime || typeof displayTime !== "string") return NaN;
+  const match = displayTime.match(/^(\d{1,2}):(\d{2})\s(AM|PM)$/i);
+  if (!match) return NaN;
+
+  let hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  const suffix = match[3].toUpperCase();
+
+  if (hours === 12) hours = 0;
+  if (suffix === "PM") hours += 12;
+
+  return timeToMinutes(`${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`);
+};
+
 const clamp = (value, min = 0, max = 100) => Math.max(min, Math.min(max, value));
 
 const budgetRank = {
@@ -57,6 +72,6 @@ module.exports = {
   estimateTravelMinutes,
   haversineKm,
   minutesToTime,
+  parseDisplayTime,
   timeToMinutes
 };
-
