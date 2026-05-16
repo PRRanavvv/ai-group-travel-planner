@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 import EmptyDashboard from "./EmptyDashboard.jsx";
 import TripsDashboard from "./TripsDashboard.jsx";
+import { getMyGroups } from "../src/api/groupApi";
 
 function Dashboard() {
 
@@ -12,18 +12,8 @@ function Dashboard() {
 
     const fetchGroups = async () => {
         try {
-            const token = localStorage.getItem("token");
-
-            const res = await axios.get(
-                "http://localhost:5000/api/group/my-groups",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
-            setGroups(res.data.groups ?? []);
+            const data = await getMyGroups();
+            setGroups(data.groups ?? []);
 
         } catch {
             setGroups([]);

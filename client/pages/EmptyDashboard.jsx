@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 import { FaUser, FaUsers } from "react-icons/fa";
 import Navbar from "../components/Navbar.jsx";
 import GroupModal from "../components/GroupModal";
+import { getMe } from "../src/api/authApi";
 
 function FirstVisit() {
 
@@ -14,18 +14,8 @@ function FirstVisit() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const token = localStorage.getItem("token");
-
-                const res = await axios.get(
-                    "http://localhost:5000/api/auth/me",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
-
-                setUser(res.data);
+                const data = await getMe();
+                setUser(data);
 
             } catch (err) {
                 console.log(err);

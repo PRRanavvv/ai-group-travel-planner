@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 import { SlCompass } from "react-icons/sl";
 import { FiPlus, FiEdit2, FiKey } from "react-icons/fi";
 
 import Navbar from "../components/Navbar.jsx";
 import GroupModal from "../components/GroupModal.jsx";
+import { getMe } from "../src/api/authApi";
+import { getJoinCode } from "../src/api/groupApi";
 
 function TripsDashboard({ groups, fetchGroups }) {
 
@@ -28,18 +29,8 @@ function TripsDashboard({ groups, fetchGroups }) {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const token = localStorage.getItem("token");
-
-                const res = await axios.get(
-                    "http://localhost:5000/api/auth/me",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
-
-                setUser(res.data);
+                const data = await getMe();
+                setUser(data);
 
             } catch (err) {
                 console.log(err);
@@ -56,18 +47,9 @@ function TripsDashboard({ groups, fetchGroups }) {
 
     const handleViewCode = async (groupId) => {
         try {
-            const token = localStorage.getItem("token");
+            const data = await getJoinCode(groupId);
 
-            const res = await axios.get(
-                `http://localhost:5000/api/group/${groupId}/code`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-
-            alert(`Join Code: ${res.data.joinCode}`);
+            alert(`Join Code: ${data.joinCode}`);
 
         } catch (err) {
             console.log(err.response?.data);

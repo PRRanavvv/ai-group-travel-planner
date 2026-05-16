@@ -3,8 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
 import { FiCheck } from "react-icons/fi";
 import { MdOutlineTravelExplore } from "react-icons/md";
-
-const API = "http://127.0.0.1:5000";
+import { getMe } from "../src/api/authApi";
+import { getGroup } from "../src/api/groupApi";
 
 const TripPage = () => {
     const { id } = useParams();
@@ -18,15 +18,7 @@ const TripPage = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const token = localStorage.getItem("token");
-
-                const res = await fetch("http://127.0.0.1:5000/api/auth/me", {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-                const data = await res.json();
+                const data = await getMe();
                 setUser(data);
 
             } catch (err) {
@@ -40,17 +32,7 @@ const TripPage = () => {
     useEffect(() => {
         const fetchProposals = async () => {
             try {
-                const token = localStorage.getItem("token");
-
-                const res = await fetch(`${API}/api/group/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-                const data = await res.json();
-
-                console.log("PROPOSALS:", data); // debug
+                const data = await getGroup(id);
 
                 setProposals(
                     (data.proposals || []).filter(
@@ -68,18 +50,7 @@ const TripPage = () => {
     useEffect(() => {
         const fetchTrip = async () => {
             try {
-                const token = localStorage.getItem("token");
-
-                const res = await fetch(`${API}/api/group/${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-                const data = await res.json();
-
-                if (!res.ok) throw new Error(data.message);
-
+                const data = await getGroup(id);
                 setTrip(data);
             } catch (err) {
                 console.error(err);
@@ -149,6 +120,7 @@ const TripPage = () => {
     if (loading) return <div className="p-6">Loading...</div>;
 
     const finalTrip = trip || {};
+    const previewDays = finalTrip.aiPlanning?.activeItinerary?.days || finalTrip.itinerary || [];
 
     return (
         <div className="bg-[#f5f7f8] min-h-screen cursor-pointer">
@@ -246,6 +218,13 @@ const TripPage = () => {
                             >
                                 View Full Itinerary
                             </button>
+
+                            <button
+                                onClick={() => navigate(`/trip/${id}/graph`)}
+                                className="text-xs text-teal-700 border border-dashed px-2 py-3 rounded cursor-pointer"
+                            >
+                                Graph View
+                            </button>
                         </div>
 
                         {/* CARD */}
@@ -253,7 +232,7 @@ const TripPage = () => {
 
                             {(() => {
                                 const allActivities =
-                                    finalTrip.itinerary?.flatMap(day => day.activities || []) || [];
+                                    previewDays?.flatMap(day => day.activities || []) || [];
 
                                 const preview = allActivities.slice(0, 3);
 

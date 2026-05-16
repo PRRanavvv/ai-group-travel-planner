@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { createGroup, joinGroup } from "../src/api/groupApi";
 
 function GroupModal({ onClose, fetchGroups, soloMode }) {
 
@@ -9,6 +9,7 @@ function GroupModal({ onClose, fetchGroups, soloMode }) {
     const [destination, setDestination] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+    const [planningPrompt, setPlanningPrompt] = useState("");
 
     // ✅ solo default = 1
     const [maxMembers, setMaxMembers] = useState(soloMode ? 1 : 2);
@@ -36,27 +37,20 @@ function GroupModal({ onClose, fetchGroups, soloMode }) {
                 return;
             }
 
-            await axios.post(
-                "http://localhost:5000/api/group/create",
-                {
-                    groupName,
-                    destination,
-                    startDate,
-                    endDate,
-                    maxMembers: soloMode ? 1 : maxMembers
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
+            const group = await createGroup({
+                groupName,
+                destination,
+                startDate,
+                endDate,
+                maxMembers: soloMode ? 1 : maxMembers,
+                planningPrompt
+            });
 
 
             await fetchGroups?.();
 
             // ✅ redirect dashboard
-            window.location.href = "/dashboard";
+            window.location.href = `/trip/${group._id}/graph`;
 
         } catch (err) {
             console.log(err);
@@ -76,15 +70,7 @@ function GroupModal({ onClose, fetchGroups, soloMode }) {
                 return;
             }
 
-            await axios.post(
-                "http://localhost:5000/api/group/join",
-                { code },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
+            await joinGroup({ code });
 
             await fetchGroups?.();
 
@@ -166,6 +152,13 @@ function GroupModal({ onClose, fetchGroups, soloMode }) {
                                 className="p-2 border rounded-lg w-1/2"
                             />
                         </div>
+
+                        <textarea
+                            className="w-full p-3 border rounded-lg mb-4 min-h-[96px] resize-none"
+                            placeholder="Tell WayFinder what kind of trip you want: cafes, scenic views, slow mornings, adventure, budget limits..."
+                            value={planningPrompt}
+                            onChange={(e) => setPlanningPrompt(e.target.value)}
+                        />
 
                         {/* hide when solo */}
                         {!soloMode && (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import { login, signup } from "../src/api/authApi";
 import { useNavigate } from "react-router-dom"; // 🔥 added
 
 function LoginModal({ isOpen, onClose }) {
@@ -31,13 +31,11 @@ function LoginModal({ isOpen, onClose }) {
         setError("");
 
         try {
-            const url = isLogin
-                ? "http://localhost:5000/api/auth/login"
-                : "http://localhost:5000/api/auth/signup";
+            const res = isLogin
+                ? await login(formData)
+                : await signup(formData);
 
-            const res = await axios.post(url, formData);
-
-            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("token", res.token);
             onClose();
             navigate("/dashboard");
 

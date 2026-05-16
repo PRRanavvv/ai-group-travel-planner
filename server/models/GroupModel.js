@@ -1,4 +1,43 @@
 const mongoose = require("mongoose");
+const Mixed = mongoose.Schema.Types.Mixed;
+
+const activitySchema = new mongoose.Schema({
+    time: String,
+    placeId: String,
+    durationMinutes: Number,
+    title: String,
+    description: String,
+    type: { type: String },
+    tags: [String],
+    slot: String,
+    bestTime: [String],
+    area: String,
+    coordinates: Mixed,
+    budgetTier: String,
+    estimatedCost: Number,
+    fatigueScore: Number,
+    weatherSensitivity: String,
+    score: Number,
+    semanticScore: Number,
+    source: String,
+    selectionReason: String,
+    retrievalReason: String,
+    explanation: Mixed,
+    scoreBreakdown: Mixed,
+    semanticSignals: Mixed,
+    regenerationMeta: Mixed,
+    locked: Boolean
+}, { _id: false });
+
+const itineraryDaySchema = new mongoose.Schema({
+    day: Number,
+    title: String,
+    subtitle: String,
+    fatigueScore: Number,
+    estimatedTravelMinutes: Number,
+    date: String,
+    activities: [activitySchema]
+}, { _id: false });
 
 const groupSchema = new mongoose.Schema({
 
@@ -90,21 +129,32 @@ const groupSchema = new mongoose.Schema({
     ],
 
     // 🔥 ITINERARY
-    itinerary: [
-        {
-            day: Number,
-            date: String,
-            title: String,
-            subtitle: String,
-            activities: [
-                {
-                    time: String,
-                    title: String,
-                    description: String
-                }
-            ]
-        }
-    ]
+    itinerary: [itineraryDaySchema],
+
+    aiPlanning: {
+        type: Mixed,
+        default: {}
+    },
+
+    regenerationHistory: {
+        type: [Mixed],
+        default: []
+    },
+
+    stabilitySnapshots: {
+        type: [Mixed],
+        default: []
+    },
+
+    explanationTraces: {
+        type: [Mixed],
+        default: []
+    },
+
+    userPreferences: {
+        type: Mixed,
+        default: {}
+    }
 
 }, { timestamps: true });
 

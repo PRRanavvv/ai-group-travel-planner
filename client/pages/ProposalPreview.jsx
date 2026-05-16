@@ -3,9 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { FiRepeat, FiCheck } from "react-icons/fi";
 import Navbar from "../components/Navbar";
 import {HiOutlineCalendar, HiOutlineChatAlt2, HiOutlineViewGrid} from "react-icons/hi";
-
-
-const API = "http://127.0.0.1:5000";
+import { getMe } from "../src/api/authApi";
+import {
+    applyApprovedProposals,
+    getGroup,
+    rejectProposal
+} from "../src/api/groupApi";
 
 const ProposalPreview = () => {
 
@@ -17,17 +20,20 @@ const ProposalPreview = () => {
     const [approved,setApproved] = useState([]);
     const [loading,setLoading] = useState(true);
 
+    const applyGroupData = (data) => {
+        setGroup(data);
+        setApproved(
+            (data.proposals || []).filter(
+                p => p.status === "approved"
+            )
+        );
+    };
+
     // fetch user
     useEffect(()=>{
         const fetchUser = async()=>{
             try{
-                const token = localStorage.getItem("token");
-
-                const res = await fetch(`${API}/api/auth/me`,{
-                    headers:{ Authorization:`Bearer ${token}` }
-                });
-
-                const data = await res.json();
+                const data = await getMe();
                 setUser(data);
 
             }catch(err){
@@ -42,19 +48,9 @@ const ProposalPreview = () => {
     const loadGroup = async () => {
         try{
 
-            const res =
-                await fetch(`${API}/api/group/${id}`);
+            const data = await getGroup(id);
 
-            const data = await res.json();
-
-            setGroup(data);
-
-            const approvedProposals =
-                data.proposals.filter(
-                    p => p.status === "approved"
-                );
-
-            setApproved(approvedProposals);
+            applyGroupData(data);
 
         }catch(err){
             console.log(err);
@@ -64,28 +60,40 @@ const ProposalPreview = () => {
     };
 
     useEffect(()=>{
-        loadGroup();
+        let cancelled = false;
+
+        const loadInitialGroup = async () => {
+            try {
+                const data = await getGroup(id);
+                if (!cancelled) {
+                    applyGroupData(data);
+                }
+            } catch (err) {
+                console.log(err);
+            } finally {
+                if (!cancelled) {
+                    setLoading(false);
+                }
+            }
+        };
+
+        loadInitialGroup();
+
+        return () => {
+            cancelled = true;
+        };
     },[id]);
 
     const reject = async (proposalId)=>{
 
-        await fetch(`${API}/api/group/${id}/reject`,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({proposalId})
-        });
+        await rejectProposal(id, { proposalId });
 
         await loadGroup();
     };
 
     const applyAll = async()=>{
 
-        await fetch(
-            `${API}/api/group/${id}/apply`,
-            {method:"POST"}
-        );
+        await applyApprovedProposals(id);
 
         // clear approved locally
         setApproved([]);

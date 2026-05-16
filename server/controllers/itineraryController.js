@@ -1,4 +1,4 @@
-const Group = require("../models/groupModel");
+const Group = require("../models/GroupModel");
 const groq = require("../config/groq");
 
 const generateItinerary = async (req, res) => {

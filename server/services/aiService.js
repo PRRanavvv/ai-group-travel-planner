@@ -1,13 +1,12 @@
 const groq = require("../config/groq");
 const cosineSimilarity = require("../utils/cosineSimilarity");
 
-const { pipeline } = require("@xenova/transformers");
-
 let embedder;
 
 // load once
 const getEmbedder = async () => {
     if (!embedder) {
+        const { pipeline } = await import("@xenova/transformers");
         embedder = await pipeline(
             "feature-extraction",
             "Xenova/all-MiniLM-L6-v2"

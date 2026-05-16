@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { useParams } from "react-router-dom";
 import { FiThumbsUp, FiThumbsDown, FiCheck } from "react-icons/fi";
-
-const API = "http://127.0.0.1:5000";
+import { getMe } from "../src/api/authApi";
+import {
+    addProposal,
+    approveProposal,
+    getGroup,
+    voteProposal
+} from "../src/api/groupApi";
 
 const ProposalPage = () => {
 
@@ -21,13 +26,7 @@ const ProposalPage = () => {
             const token = localStorage.getItem("token");
             if (!token) return;
 
-            const res = await fetch(`${API}/api/auth/me`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            if (!res.ok) return;
-
-            const data = await res.json();
+            const data = await getMe();
             setUser(data.user || data);
 
         } catch (err) {
@@ -36,8 +35,7 @@ const ProposalPage = () => {
     };
 
     const fetchGroup = async () => {
-        const res = await fetch(`${API}/api/group/${id}`);
-        const data = await res.json();
+        const data = await getGroup(id);
         setGroup(data);
     };
 
@@ -45,19 +43,10 @@ const ProposalPage = () => {
 
         if (!text.trim()) return;
 
-        const token = localStorage.getItem("token");
-
-        await fetch(`${API}/api/group/${id}/proposal`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                text,
-                type,
-                target
-            })
+        await addProposal(id, {
+            text,
+            type,
+            target
         });
 
         setText("");
@@ -68,31 +57,13 @@ const ProposalPage = () => {
     };
 
     const vote = async (proposalId, type) => {
-        const token = localStorage.getItem("token");
-
-        await fetch(`${API}/api/group/${id}/vote`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ proposalId, type })
-        });
+        await voteProposal(id, { proposalId, type });
 
         fetchGroup();
     };
 
     const approve = async (proposalId) => {
-        const token = localStorage.getItem("token");
-
-        await fetch(`${API}/api/group/${id}/approve`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ proposalId })
-        });
+        await approveProposal(id, { proposalId });
 
         await fetchGroup();
 

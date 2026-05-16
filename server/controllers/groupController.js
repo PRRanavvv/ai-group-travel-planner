@@ -1,7 +1,4 @@
-const Group = require("../models/groupModel");
-
-const OpenAI = require("openai");
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const Group = require("../models/GroupModel");
 const { regenerateItineraryWithAI } = require("../services/aiService");
 
 // 🔹 Generate unique join code
@@ -21,7 +18,7 @@ const generateUniqueCode = async () => {
 // ✅ CREATE GROUP
 const createGroup = async (req, res) => {
     try {
-        const { groupName, destination, startDate, endDate, maxMembers } = req.body;
+        const { groupName, destination, startDate, endDate, maxMembers, planningPrompt } = req.body;
 
         if (!groupName || !destination || !startDate || !endDate) {
             return res.status(400).json({
@@ -57,7 +54,10 @@ const createGroup = async (req, res) => {
             createdBy: req.user._id,
             image: imageUrl,
             maxMembers,
-            type: maxMembers > 1 ? "group" : "solo"
+            type: maxMembers > 1 ? "group" : "solo",
+            userPreferences: {
+                planningPrompt: planningPrompt || ""
+            }
         });
 
         group.members.push({
